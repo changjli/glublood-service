@@ -20,7 +20,7 @@ class SendCodeRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|unique:users,email',
+            'email' => 'required|unique:users,email|email',
         ];
     }
 }

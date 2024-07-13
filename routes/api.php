@@ -6,9 +6,7 @@ use App\Http\Middleware\LoggingMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 Route::post('send-code', [AuthController::class, 'sendCode']);
-Route::post('verify-code', [AuthController::class, 'verifyCode']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);

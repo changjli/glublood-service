@@ -24,6 +24,12 @@ class RegisterRequest extends BaseFormRequest
         return [
             'email' => 'required',
             'password' => 'required',
+            'code' => 'required',
         ];
+    }
+
+    public function messages(): array
+    {
+        return [];
     }
 }
