@@ -9,6 +9,7 @@ use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\ResendCodeRequest;
 use App\Http\Requests\SendCodeRequest;
 use App\Http\Requests\VerifyCodeRequest;
+use App\Http\Resources\LoginResource;
 use App\Http\Resources\UserResource;
 use App\Mail\VerificationMail;
 use App\Models\User;
@@ -30,57 +31,22 @@ class AuthController extends Controller
         ];
         DB::beginTransaction();
         try {
-
-            $verificationCode = VerificationCode::where('email', $details['email'])->first();
-
-            if ($verificationCode && $verificationCode->verified_at) {
-                ResponseTemplate::sendResponseErrorWithRollback();
-            }
-
-            if ($verificationCode) {
-                $verificationCode->delete();
-            }
-
             $code = $this->generateRandomString(6);
 
-            VerificationCode::create([
-                'email' => $details['email'],
-                'code' => $code,
-                'expires_at' => Carbon::now()->addMinutes(3),
-            ]);
+            VerificationCode::updateOrCreate(
+                [
+                    'email' => $details['email'],
+                ],
+                [
+                    'email' => $details['email'],
+                    'code' => $code,
+                    'expires_at' => Carbon::now()->addMinutes(3),
+                ]
+            );
 
             Mail::to($details['email'])->send(new VerificationMail($code));
 
             return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Email verifikasi telah dikirim!');
-        } catch (\Exception $ex) {
-            return ResponseTemplate::sendResponseErrorWithRollback($ex);
-        }
-    }
-
-    public function verifyCode(VerifyCodeRequest $request)
-    {
-        $details = [
-            'email' => $request->email,
-            'code' => $request->code,
-        ];
-        DB::beginTransaction();
-        try {
-            $verificationCode = VerificationCode::where('email', $details['email'])->where('code', $details['code'])->first();
-
-            if (!$verificationCode || $verificationCode->expires_at < Carbon::now()) {
-                return ResponseTemplate::sendResponseErrorWithRollback(message: 'Verifikasi email gagal!');
-            }
-
-            // create default password, is_active is false 
-            User::create([
-                'email' => $details['email'],
-                'password' => 'password',
-                'email_verified_at' => Carbon::now(),
-            ]);
-
-            $verificationCode->delete();
-
-            return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Verifikasi email berhasil!');
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseErrorWithRollback($ex);
         }
@@ -91,20 +57,23 @@ class AuthController extends Controller
         $details = [
             'email' => $request->email,
             'password' => $request->password,
+            'code' => $request->code,
         ];
         DB::beginTransaction();
         try {
-            $user = User::where('email', $details['email'])->whereRaw('email_verified_at IS NOT NULL')->first();
+            $verificationCode = VerificationCode::where('email', $details['email'])->where('code', $details['code'])->first();
 
-            // check if email is verified 
-            if (!$user) {
+            if (!$verificationCode || $verificationCode->expires_at < Carbon::now()) {
                 return ResponseTemplate::sendResponseErrorWithRollback(message: 'Registrasi gagal!');
             }
 
-            $user->update([
+            User::create([
+                'email' => $details['email'],
                 'password' => $details['password'],
-                'is_active' => true,
+                'email_verified_at' => Carbon::now(),
             ]);
+
+            $verificationCode->delete();
 
             return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Registrasi berhasil!');
         } catch (\Exception $ex) {
@@ -121,21 +90,21 @@ class AuthController extends Controller
         try {
             $credentials = $details;
 
-            $user = User::where('email', $credentials['email'])->first();
-
-            // check if email is verified but password not change 
-            if (!$user->is_active) {
+            if (!$token = auth()->attempt($credentials)) {
                 return ResponseTemplate::sendResponseError(message: 'Login gagal!');
             }
 
-            if (!$token = auth()->attempt($credentials)) {
+            $user = User::where('email', $credentials['email'])->first();
+
+            // check if email is not verified 
+            if (!$user->email_verified_at) {
                 return ResponseTemplate::sendResponseError(message: 'Login gagal!');
             }
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Login berhasil!',
-                'data' => $user,
+                'data' => new LoginResource($user),
                 'token' => $token,
             ], 200);
         } catch (\Exception $ex) {
