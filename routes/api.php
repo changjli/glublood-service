@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('test', function () {
         return response()->json(['data' => 'hello world']);
     });
+
+    Route::post('user-profile-form', [UserProfileController::class, 'store']);
 
     Route::get('logout', [AuthController::class, 'logout']);
 });

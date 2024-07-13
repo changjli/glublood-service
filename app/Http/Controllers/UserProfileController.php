@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\UserProfile;
 use App\Http\Requests\StoreUserProfileRequest;
 use App\Http\Requests\UpdateUserProfileRequest;
+use Illuminate\Support\Facades\DB;
+use App\Classes\ResponseTemplate;
 
 class UserProfileController extends Controller
 {
@@ -29,7 +31,39 @@ class UserProfileController extends Controller
      */
     public function store(StoreUserProfileRequest $request)
     {
-        //
+        $details = [
+            'fullname' => $request->fullname,
+            'weight' => $request->weight,
+            'height' => $request->height,
+            'age' => $request->age,
+            'DOB' => $request->DOB,
+            'gender' => $request->gender,
+            'is_descendant_diabetes' => $request->is_descendant_diabetes,
+            'is_diabetes' => $request->is_diabetes,
+            'medical_history' => $request->medical_history,
+            'diabetes_type' => $request->diabetes_type,
+        ];
+        
+        DB::beginTransaction();
+        
+        try {
+            $userProfile = UserProfile::create([
+                'fullname' => $details['fullname'],
+                'weight' => $details['weight'],
+                'height' => $details['height'],
+                'age' => $details['age'],
+                'DOB' => $details['DOB'],
+                'gender' => $details['gender'],
+                'is_descendant_diabetes' => $details['is_descendant_diabetes'],
+                'is_diabetes' => $details['is_diabetes'],
+                'medical_history' => $details['medical_history'],
+                'diabetes_type' => $details['diabetes_type'],
+            ]);
+
+            return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Pengisian User Profile Berhasil');
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseErrorWithRollback($ex);
+        }
     }
 
     /**

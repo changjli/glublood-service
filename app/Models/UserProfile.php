@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class UserProfile extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id', 'fullname', 'weight', 'height', 'age', 'DOB', 'gender', 
+        'is_descendant_diabetes', 'is_diabetes', 'medical_history', 'diabetes_type'
+    ];
 }
