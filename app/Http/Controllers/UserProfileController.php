@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GetUserProfileDetailResource;
 use App\Models\UserProfile;
 use App\Http\Requests\StoreUserProfileRequest;
 use App\Http\Requests\UpdateUserProfileRequest;
 use Illuminate\Support\Facades\DB;
 use App\Classes\ResponseTemplate;
+use Illuminate\Support\Facades\Log;
+
+
 
 class UserProfileController extends Controller
 {
@@ -31,7 +35,10 @@ class UserProfileController extends Controller
      */
     public function store(StoreUserProfileRequest $request)
     {
+        $user = auth()->user();
+        
         $details = [
+            'user_id' => $user->id,
             'fullname' => $request->fullname,
             'weight' => $request->weight,
             'height' => $request->height,
@@ -47,7 +54,14 @@ class UserProfileController extends Controller
         DB::beginTransaction();
         
         try {
+            $userProfile = UserProfile::where('user_id', $user->id)->first();
+
+            if ($userProfile) {
+                return ResponseTemplate::sendResponseErrorWithRollback(message: 'User profile for ' . $user->email . ' already exists.');
+            }
+
             $userProfile = UserProfile::create([
+                'user_id' => $details['user_id'],
                 'fullname' => $details['fullname'],
                 'weight' => $details['weight'],
                 'height' => $details['height'],
@@ -71,7 +85,19 @@ class UserProfileController extends Controller
      */
     public function show(UserProfile $userProfile)
     {
-        //
+        $user = auth()->user();
+
+        try {
+            $userProfile = UserProfile::where('user_id', $user->id)->first();
+    
+            if (!$userProfile) {
+                return ResponseTemplate::sendResponseError(message: 'User profile not found.');
+            }
+    
+            return ResponseTemplate::sendResponseSuccess(message: 'Show User Profile Berhasil!', result: new GetUserProfileDetailResource($userProfile), code: 200);
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseError($ex);
+        }
     }
 
     /**
@@ -85,9 +111,39 @@ class UserProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserProfileRequest $request, UserProfile $userProfile)
+    public function update(UpdateUserProfileRequest $request)
     {
-        //
+        $user = auth()->user();
+
+        DB::beginTransaction();
+        
+        try {
+            $userProfile = UserProfile::where('user_id', $user->id)->first();
+            
+            if (!$userProfile) {
+                return ResponseTemplate::sendResponseError(message: 'User profile not found.');
+            }
+
+            $userProfile->update([
+                'fullname' => $request->fullname,
+                'weight' => $request->weight,
+                'height' => $request->height,
+                'age' => $request->age,
+                'DOB' => $request->DOB,
+                'gender' => $request->gender,
+                'is_descendant_diabetes' => $request->is_descendant_diabetes,
+                'is_diabetes' => $request->is_diabetes,
+                'medical_history' => $request->medical_history,
+                'diabetes_type' => $request->diabetes_type,
+            ]);
+
+            DB::commit();
+            
+            return ResponseTemplate::sendResponseSuccess(message: 'Update User Profile Berhasil!');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return ResponseTemplate::sendResponseErrorWithRollback(message: 'Failed to update user profile'); // Internal Server Error status code
+        }
     }
 
     /**
