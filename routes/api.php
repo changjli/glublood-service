@@ -14,10 +14,10 @@ Route::get('/test-error', function () {
     throw new \Exception('Test error');
 });
 
-Route::middleware('auth:api')->group(function () {
-    Route::get('test', function () {
-        return response()->json(['data' => 'hello world']);
-    });
+Route::get('test', function () {
+    return response()->json(['data' => 'hello world']);
+});
 
+Route::middleware('auth:api')->group(function () {
     Route::get('logout', [AuthController::class, 'logout']);
 });

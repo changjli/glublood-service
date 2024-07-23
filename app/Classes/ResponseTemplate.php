@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class ResponseTemplate
 {
-    public static function sendResponseError($e = null, $message = "Something went wrong! Process not completed", $code = 200)
+    public static function sendResponseError($e = null, $message = "Something went wrong! Process not completed", $code = 400)
     {
         if ($e) {
             Log::info($e);
@@ -17,7 +17,7 @@ class ResponseTemplate
             'status' => $code,
             'message' => $message,
         ];
-        return response()->json($response, $code);
+        return response()->json($response, 200);
     }
 
     public static function sendResponseSuccess($message, $result = null, $code = 200)
@@ -29,7 +29,7 @@ class ResponseTemplate
         if ($result) {
             $response['data'] = $result;
         }
-        return response()->json($response, $code);
+        return response()->json($response, 200);
     }
 
     public static function sendResponseErrorWithRollback($e = null, $message = "Something went wrong! Process not completed", $code = 200)
