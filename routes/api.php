@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,10 +15,12 @@ Route::get('/test-error', function () {
     throw new \Exception('Test error');
 });
 
-Route::get('test', function () {
-    return response()->json(['data' => 'hello world']);
-});
-
 Route::middleware('auth:api')->group(function () {
-    Route::get('logout', [AuthController::class, 'logout']);
+    Route::get('test', function () {
+        return response()->json(['data' => 'hello world']);
+    });
+
+    Route::post('user-profile', [UserProfileController::class, 'store']);
+    Route::get('user-profile', [UserProfileController::class, 'show']);
+    Route::put('user-profile', [UserProfileController::class, 'update']);
 });

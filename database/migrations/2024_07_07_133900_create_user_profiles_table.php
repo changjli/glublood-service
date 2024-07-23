@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_profiles', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('fullname');
             $table->decimal('weight');
@@ -24,7 +25,6 @@ return new class extends Migration
             $table->string('medical_history');
             $table->integer('diabetes_type');
             $table->timestamps();
-            $table->primary('user_id');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

@@ -14,6 +14,17 @@ class GetUserProfileDetailResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'fullname' => $this->fullname,
+            'weight' => $this->weight,
+            'height' => $this->height,
+            'age' => $this->age,
+            'DOB' => $this->DOB,
+            'gender' => $this->gender,
+            'is_descendant_diabetes' => $this->is_descendant_diabetes,
+            'is_diabetes' => $this->is_diabetes,
+            'medical_history' => $this->medical_history,
+            'diabetes_type' => $this->diabetes_type,
+        ];
     }
 }
