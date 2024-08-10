@@ -39,7 +39,8 @@ class UserProfileController extends Controller
         
         $details = [
             'user_id' => $user->id,
-            'fullname' => $request->fullname,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
             'weight' => $request->weight,
             'height' => $request->height,
             'age' => $request->age,
@@ -62,7 +63,8 @@ class UserProfileController extends Controller
 
             $userProfile = UserProfile::create([
                 'user_id' => $details['user_id'],
-                'fullname' => $details['fullname'],
+                'firstname' => $details['firstname'],
+                'lastname' => $details['lastname'],
                 'weight' => $details['weight'],
                 'height' => $details['height'],
                 'age' => $details['age'],
@@ -125,7 +127,8 @@ class UserProfileController extends Controller
             }
 
             $userProfile->update([
-                'fullname' => $request->fullname,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
                 'weight' => $request->weight,
                 'height' => $request->height,
                 'age' => $request->age,

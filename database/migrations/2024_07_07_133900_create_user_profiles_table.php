@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('fullname');
+            $table->string('firstname');
+            $table->string('lastname');
             $table->decimal('weight');
             $table->decimal('height');
             $table->integer('age');

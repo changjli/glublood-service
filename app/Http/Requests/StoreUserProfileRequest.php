@@ -22,7 +22,8 @@ class StoreUserProfileRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'fullname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
             'weight' => 'required|numeric',
             'height' => 'required|numeric',
             'age' => 'required|integer',
