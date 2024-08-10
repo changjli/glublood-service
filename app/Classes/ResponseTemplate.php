@@ -26,7 +26,7 @@ class ResponseTemplate
             'status' => $code,
             'message' => $message,
         ];
-        if ($result) {
+        if ($result != null) {
             $response['data'] = $result;
         }
         return response()->json($response, 200);

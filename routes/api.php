@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DiabetesPredictionController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
 use Illuminate\Http\Request;
@@ -23,4 +24,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('user-profile', [UserProfileController::class, 'store']);
     Route::get('user-profile', [UserProfileController::class, 'show']);
     Route::put('user-profile', [UserProfileController::class, 'update']);
+
+    Route::get('diabetes-prediction', [DiabetesPredictionController::class, 'index']);
+    Route::post('diabetes-prediction', [DiabetesPredictionController::class, 'store']);
+    Route::get('diabetes-prediction/predict', [DiabetesPredictionController::class, 'predict']);
+    Route::get('diabetes-prediction/{diabetesPrediction}', [DiabetesPredictionController::class, 'show']);
 });
