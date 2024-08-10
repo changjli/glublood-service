@@ -36,7 +36,7 @@ class UserProfileController extends Controller
     public function store(StoreUserProfileRequest $request)
     {
         $user = auth()->user();
-        
+
         $details = [
             'user_id' => $user->id,
             'fullname' => $request->fullname,
@@ -45,14 +45,14 @@ class UserProfileController extends Controller
             'age' => $request->age,
             'DOB' => $request->DOB,
             'gender' => $request->gender,
-            'is_descendant_diabetes' => $request->is_descendant_diabetes,
+            'is_descendant_diabetes' => $request->i_sdescendant_diabetes,
             'is_diabetes' => $request->is_diabetes,
             'medical_history' => $request->medical_history,
             'diabetes_type' => $request->diabetes_type,
         ];
-        
+
         DB::beginTransaction();
-        
+
         try {
             $userProfile = UserProfile::where('user_id', $user->id)->first();
 
@@ -89,11 +89,11 @@ class UserProfileController extends Controller
 
         try {
             $userProfile = UserProfile::where('user_id', $user->id)->first();
-    
+
             if (!$userProfile) {
                 return ResponseTemplate::sendResponseError(message: 'User profile not found.');
             }
-    
+
             return ResponseTemplate::sendResponseSuccess(message: 'Show User Profile Berhasil!', result: new GetUserProfileDetailResource($userProfile), code: 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
@@ -116,10 +116,10 @@ class UserProfileController extends Controller
         $user = auth()->user();
 
         DB::beginTransaction();
-        
+
         try {
             $userProfile = UserProfile::where('user_id', $user->id)->first();
-            
+
             if (!$userProfile) {
                 return ResponseTemplate::sendResponseError(message: 'User profile not found.');
             }
@@ -138,7 +138,7 @@ class UserProfileController extends Controller
             ]);
 
             DB::commit();
-            
+
             return ResponseTemplate::sendResponseSuccess(message: 'Update User Profile Berhasil!');
         } catch (\Exception $ex) {
             DB::rollBack();
