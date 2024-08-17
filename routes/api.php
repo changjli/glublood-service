@@ -12,6 +12,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('change-password', [AuthController::class, 'changePassword']);
+Route::post('refresh', [AuthController::class, 'refresh']);
 Route::get('/test-error', function () {
     throw new \Exception('Test error');
 });

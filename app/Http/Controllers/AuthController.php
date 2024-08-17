@@ -96,7 +96,7 @@ class AuthController extends Controller
 
             $user = User::where('email', $credentials['email'])->first();
 
-            // check if email is not verified 
+            // check if email is not verified
             if (!$user->email_verified_at) {
                 return ResponseTemplate::sendResponseError(message: 'Login gagal!');
             }
@@ -106,6 +106,8 @@ class AuthController extends Controller
                 'message' => 'Login berhasil!',
                 'data' => new LoginResource($user),
                 'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
             ], 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
@@ -118,6 +120,23 @@ class AuthController extends Controller
             auth()->logout(true);
 
             return ResponseTemplate::sendResponseSuccess(message: 'Logout berhasil!');
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseError($ex);
+        }
+    }
+
+    public function refresh()
+    {
+        try {
+            $token = auth()->refresh(true);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Refresh token berhasil!',
+                'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ], 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
         }
