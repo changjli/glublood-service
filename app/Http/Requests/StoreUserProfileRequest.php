@@ -28,7 +28,7 @@ class StoreUserProfileRequest extends BaseFormRequest
             'height' => 'required|numeric',
             'age' => 'required|integer',
             'DOB' => 'required|date',
-            'gender' => 'required|boolean',
+            'gender' => 'required|string',
             'is_descendant_diabetes' => 'required|boolean',
             'is_diabetes' => 'required|string|max:255',
             'medical_history' => 'required|string|max:500',
