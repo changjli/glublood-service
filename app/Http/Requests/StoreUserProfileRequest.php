@@ -32,7 +32,7 @@ class StoreUserProfileRequest extends BaseFormRequest
             'is_descendant_diabetes' => 'required|boolean',
             'is_diabetes' => 'required|boolean',
             'medical_history' => 'required|string|max:500',
-            'diabetes_type' => 'required|integer',
+            'diabetes_type' => 'integer',
         ];
     }
 }
