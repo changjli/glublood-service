@@ -46,7 +46,7 @@ class UserProfileController extends Controller
             'age' => $request->age,
             'DOB' => $request->DOB,
             'gender' => $request->gender,
-            'is_descendant_diabetes' => $request->i_sdescendant_diabetes,
+            'is_descendant_diabetes' => $request->is_descendant_diabetes,
             'is_diabetes' => $request->is_diabetes,
             'medical_history' => $request->medical_history,
             'diabetes_type' => $request->diabetes_type,
