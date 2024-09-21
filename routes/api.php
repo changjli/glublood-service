@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DiabetesPredictionController;
 use App\Http\Controllers\FoodLogController;
+use App\Http\Controllers\MedicineLogController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
 use Illuminate\Http\Request;
@@ -40,4 +41,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('food/{foodLog}', [FoodLogController::class, 'show']);
     Route::put('food/{foodLog}', [FoodLogController::class, 'update']);
     Route::delete('food/{foodLog}', [FoodLogController::class, 'destroy']);
+
+    Route::post('medicine', [MedicineLogController::class, 'store']);
+    Route::get('medicine/{medicineLog}', [MedicineLogController::class, 'show']);
+    Route::put('medicine/{medicineLog}', [MedicineLogController::class, 'update']);
+    Route::delete('medicine/{medicineLog}', [MedicineLogController::class, 'destroy']);
+    
 });
