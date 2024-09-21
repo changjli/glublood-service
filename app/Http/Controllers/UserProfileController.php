@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserProfileImageRequest;
 use App\Http\Resources\GetUserProfileDetailResource;
 use App\Models\UserProfile;
 use App\Http\Requests\StoreUserProfileRequest;
@@ -74,6 +75,7 @@ class UserProfileController extends Controller
                 'is_diabetes' => $details['is_diabetes'],
                 'medical_history' => $details['medical_history'],
                 'diabetes_type' => $details['diabetes_type'],
+                'image' => '-',
             ]);
 
             return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Pengisian User Profile Berhasil');
@@ -135,15 +137,14 @@ class UserProfileController extends Controller
                 'DOB' => $request->DOB,
                 'gender' => $request->gender,
                 'is_descendant_diabetes' => $request->is_descendant_diabetes,
-                'is_diabetes' => $request->is_diabetes,
                 'medical_history' => $request->medical_history,
-                'diabetes_type' => $request->diabetes_type,
             ]);
 
             DB::commit();
 
             return ResponseTemplate::sendResponseSuccess(message: 'Update User Profile Berhasil!');
         } catch (\Exception $ex) {
+            Log::info($ex);
             DB::rollBack();
             return ResponseTemplate::sendResponseErrorWithRollback(message: 'Failed to update user profile'); // Internal Server Error status code
         }
