@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\MedicineLog;
+namespace App\Http\Requests\GlucoseLog;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMedicineLogRequest extends FormRequest
+class StoreGlucoseLogRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,9 @@ class StoreMedicineLogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'glucose_rate' => 'required|numeric',
             'time' => 'required|date_format:H:i:s',
-            'amount' => 'required|numeric',
-            'type' => 'required|string',
+            'time_selection' => 'required|string',
             'notes' => 'required|string|max:300',
         ];
     }

@@ -10,6 +10,8 @@ use App\Services\DiabetesPredictionService;
 use App\Services\DiabetesPredictionServiceInterface;
 use App\Services\FoodLog\FoodLogService;
 use App\Services\FoodLog\FoodLogServiceInterface;
+use App\Services\GlucoseLog\GlucoseLogService;
+use App\Services\GlucoseLog\GlucoseLogServiceInterface;
 use App\Services\MedicineLog\MedicineLogService;
 use App\Services\MedicineLog\MedicineLogServiceInterface;
 use App\Services\OpenFoodFacts\OpenFoodFactsService as OpenFoodFactsOpenFoodFactsService;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OpenFoodFactsOpenFoodFactsServiceInterface::class, OpenFoodFactsOpenFoodFactsService::class);
         $this->app->bind(FoodLogServiceInterface::class, FoodLogService::class);
         $this->app->bind(MedicineLogServiceInterface::class, MedicineLogService::class);
+        $this->app->bind(GlucoseLogServiceInterface::class, GlucoseLogService::class);
     }
 
     /**
