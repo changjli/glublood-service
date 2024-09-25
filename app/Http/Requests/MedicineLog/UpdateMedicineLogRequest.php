@@ -23,7 +23,7 @@ class UpdateMedicineLogRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'time' => 'required|string',
+            'time' => 'required|date_format:H:i:s',
             'amount' => 'required|numeric',
             'type' => 'required|string',
             'notes' => 'required|string|max:300',
