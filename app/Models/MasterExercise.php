@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FoodLog extends Model
+class MasterExercise extends Model
 {
     use HasFactory;
 
-    protected $guarded = [
-        'id',
-    ];
-
-    public function user()
+    protected function casts(): array
     {
-        $this->belongsTo(User::class);
+        return [
+            'calories_per_kg' => 'float',
+        ];
     }
 }

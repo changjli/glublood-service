@@ -35,21 +35,21 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([
                 'status' => 500,
                 'message' => 'Something went wrong! Process not completed',
-            ], 200);
+            ], 500);
         });
 
         $exceptions->render(function (NotFoundHttpException $e) {
             return response()->json([
                 'status' => 404,
                 'message' => 'Resource not found!',
-            ], 200);
+            ], 404);
         });
 
         $exceptions->render(function (HttpClientException $e) {
             return response()->json([
-                'status' => 404,
+                'status' => 500,
                 'message' => 'External error!',
-            ], 200);
+            ], 500);
         });
 
         // $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {

@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateDiabetesPredictionRequest;
 use App\Http\Resources\DiabetesPredictionCollection;
 use App\Http\Resources\DiabetesPredictionResource;
 use App\Services\DiabetesPredictionService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -28,7 +29,7 @@ class DiabetesPredictionController extends Controller
     public function index()
     {
         try {
-            $user = auth()->user();
+            $user = Auth::user();
 
             $data = $this->diabetesPredictionService->getByUserId($user->id);
 
@@ -58,7 +59,7 @@ class DiabetesPredictionController extends Controller
         try {
             DB::beginTransaction();
 
-            $user = auth()->user();
+            $user = Auth::user();
             $request['user_id'] = $user->id;
 
             $result = $this->diabetesPredictionService->create($request->toArray());

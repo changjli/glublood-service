@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\FoodLog;
+namespace App\Http\Requests\MasterExercises;
 
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreFoodLogRequest extends BaseFormRequest
+class GetAllRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +23,13 @@ class StoreFoodLogRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date_format:Y-m-d',
-            'time' => 'required|date_format:H:i',
-            'type' => 'required',
-            'food_name' => 'required',
-            'calories' => 'required',
-            'protein' => 'required',
-            'carbohydrate' => 'required',
-            'fat' => 'required',
-            'serving_size' => 'required',
-            'serving_qty' => 'required',
+            'query' => 'nullable|string',
         ];
+    }
+
+    public function validationData()
+    {
+        // This method ensures query parameters are validated
+        return $this->query();
     }
 }
