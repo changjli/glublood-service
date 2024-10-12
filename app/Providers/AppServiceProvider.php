@@ -14,6 +14,10 @@ use App\Services\MasterExercise\MasterExerciseService;
 use App\Services\MasterExercise\MasterExerciseServiceInterface;
 use App\Services\MasterFood\MasterFoodService;
 use App\Services\MasterFood\MasterFoodServiceInterface;
+use App\Services\GlucoseLog\GlucoseLogService;
+use App\Services\GlucoseLog\GlucoseLogServiceInterface;
+use App\Services\MedicineLog\MedicineLogService;
+use App\Services\MedicineLog\MedicineLogServiceInterface;
 use App\Services\OpenFoodFacts\OpenFoodFactsService as OpenFoodFactsOpenFoodFactsService;
 use App\Services\OpenFoodFacts\OpenFoodFactsServiceInterface as OpenFoodFactsOpenFoodFactsServiceInterface;
 use App\Services\OpenFoodFactsService;
@@ -34,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(FoodLogServiceInterface::class, FoodLogService::class);
         $this->app->bind(MasterExerciseServiceInterface::class, MasterExerciseService::class);
         $this->app->bind(MasterFoodServiceInterface::class, MasterFoodService::class);
+        $this->app->bind(MedicineLogServiceInterface::class, MedicineLogService::class);
+        $this->app->bind(GlucoseLogServiceInterface::class, GlucoseLogService::class);
     }
 
     /**

@@ -7,6 +7,8 @@ use App\Http\Controllers\ExerciseLogController;
 use App\Http\Controllers\FoodLogController;
 use App\Http\Controllers\MasterExerciseController;
 use App\Http\Controllers\MasterFoodController;
+use App\Http\Controllers\GlucoseLogController;
+use App\Http\Controllers\MedicineLogController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
 use App\Models\MasterExercise;
@@ -65,4 +67,14 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('daily-calories', [DailyCaloriesController::class, 'index']);
     Route::post('daily-calories', [DailyCaloriesController::class, 'store']);
+
+    Route::post('medicine', [MedicineLogController::class, 'store']);
+    Route::get('medicine/{medicineLog}', [MedicineLogController::class, 'show']);
+    Route::put('medicine/{medicineLog}', [MedicineLogController::class, 'update']);
+    Route::delete('medicine/{medicineLog}', [MedicineLogController::class, 'destroy']);
+
+    Route::post('glucose', [GlucoseLogController::class, 'store']);
+    Route::get('glucose/{glucoseLog}', [GlucoseLogController::class, 'show']);
+    Route::put('glucose/{glucoseLog}', [GlucoseLogController::class, 'update']);
+    Route::delete('glucose/{glucoseLog}', [GlucoseLogController::class, 'destroy']);
 });
