@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FoodLog extends Model
+class ExerciseLog extends Model
 {
     use HasFactory;
 
@@ -16,5 +16,10 @@ class FoodLog extends Model
     public function user()
     {
         $this->belongsTo(User::class);
+    }
+
+    public function masterExercise()
+    {
+        $this->belongsTo(MasterExercise::class);
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Requests\FoodLog\SearchFoodRequest;
 use App\Http\Requests\FoodLog\StoreFoodLogRequest;
 use App\Http\Requests\FoodLog\UpdateFoodLogRequest;
 use App\Models\FoodLog;
+use App\Services\DailyCalories\DailyCaloriesService;
 use App\Services\FoodLog\FoodLogService;
 use App\Services\OpenFoodFacts\OpenFoodFactsService;
 use Illuminate\Http\Request;
@@ -19,11 +20,13 @@ class FoodLogController extends Controller
 {
     protected $openFoodFactsService;
     protected $foodLogService;
+    protected $dailyCaloriesService;
 
-    public function __construct(OpenFoodFactsService $openFoodFactsService, FoodLogService $foodLogService)
+    public function __construct(OpenFoodFactsService $openFoodFactsService, FoodLogService $foodLogService, DailyCaloriesService $dailyCaloriesService)
     {
         $this->openFoodFactsService = $openFoodFactsService;
         $this->foodLogService = $foodLogService;
+        $this->dailyCaloriesService = $dailyCaloriesService;
     }
 
     /**
@@ -57,6 +60,8 @@ class FoodLogController extends Controller
             DB::beginTransaction();
 
             $this->foodLogService->store($request->toArray());
+
+            // $this->dailyCaloriesService->updateConsumedCalories($request->date, $request->calories);
 
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Success store food log!');
