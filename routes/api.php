@@ -43,11 +43,13 @@ Route::middleware('auth:api')->group(function () {
     Route::put('food/{foodLog}', [FoodLogController::class, 'update']);
     Route::delete('food/{foodLog}', [FoodLogController::class, 'destroy']);
 
+    Route::get('medicine', [MedicineLogController::class, 'index']);
     Route::post('medicine', [MedicineLogController::class, 'store']);
     Route::get('medicine/{medicineLog}', [MedicineLogController::class, 'show']);
     Route::put('medicine/{medicineLog}', [MedicineLogController::class, 'update']);
     Route::delete('medicine/{medicineLog}', [MedicineLogController::class, 'destroy']);
     
+    Route::get('glucose', [GlucoseLogController::class, 'index']);
     Route::post('glucose', [GlucoseLogController::class, 'store']);
     Route::get('glucose/{glucoseLog}', [GlucoseLogController::class, 'show']);
     Route::put('glucose/{glucoseLog}', [GlucoseLogController::class, 'update']);

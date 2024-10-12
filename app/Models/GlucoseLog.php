@@ -10,6 +10,6 @@ class GlucoseLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'glucose_rate', 'time', 'time_selection', 'notes',
+        'date', 'user_id', 'glucose_rate', 'time', 'time_selection', 'notes',
     ];
 }
