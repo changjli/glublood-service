@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('medicines', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->time('time');
+            $table->string('time');
             $table->integer('amount');
             $table->string('type');
             $table->string('notes');

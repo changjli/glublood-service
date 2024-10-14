@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('glucose_logs', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->unsignedBigInteger('user_id');
             $table->integer('glucose_rate');
-            $table->time('time');
+            $table->string('time');
             $table->string('time_selection');
             $table->string('notes');
             $table->timestamps();

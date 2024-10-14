@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\ResponseTemplate;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GlucoseLog\GetGlucoseLogByDateRequest;
 use App\Http\Requests\GlucoseLog\StoreGlucoseLogRequest;
 use App\Http\Requests\GlucoseLog\UpdateGlucoseLogRequest;
 use App\Models\GlucoseLog;
@@ -18,6 +19,17 @@ class GlucoseLogController extends Controller
     public function __construct(GlucoseLogService $glucoseLogService)
     {
         $this->glucoseLogService = $glucoseLogService;
+    }
+
+    public function index(GetGlucoseLogByDateRequest $request)
+    {
+        try {
+            $result = $this->glucoseLogService->getByDate($request->toArray());
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get glucose logs by date!', result: $result);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     public function store(StoreGlucoseLogRequest $request)

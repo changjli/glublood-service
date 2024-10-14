@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\ResponseTemplate;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MedicineLog\GetMedicineByDateRequest;
 use App\Http\Requests\MedicineLog\StoreMedicineLogRequest;
 use App\Http\Requests\MedicineLog\UpdateMedicineLogRequest;
 use App\Models\Medicine;
@@ -18,6 +19,17 @@ class MedicineLogController extends Controller
     public function __construct(MedicineLogService $medicineLogService)
     {
         $this->medicineLogService = $medicineLogService;
+    }
+
+    public function index(GetMedicineByDateRequest $request)
+    {
+        try {
+            $result = $this->medicineLogService->getByDate($request->toArray());
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get medicine logs by date!', result: $result);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     public function store(StoreMedicineLogRequest $request)

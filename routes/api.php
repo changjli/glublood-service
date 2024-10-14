@@ -68,10 +68,30 @@ Route::middleware('auth:api')->group(function () {
     Route::get('daily-calories', [DailyCaloriesController::class, 'index']);
     Route::post('daily-calories', [DailyCaloriesController::class, 'store']);
 
+    Route::get('exercise/search', [MasterExerciseController::class, 'search']);
+
+    Route::prefix('logs')->group(function () {
+        Route::get('exercise', [ExerciseLogController::class, 'index']);
+        Route::post('exercise', [ExerciseLogController::class, 'store']);
+        Route::get('exercise/{exerciseLog}', [ExerciseLogController::class, 'show']);
+        Route::put('exercise/{id}', [ExerciseLogController::class, 'update']);
+        Route::delete('exercise/{exerciseLog}', [ExerciseLogController::class, 'destroy']);
+    });
+
+    Route::prefix('master')->group(function () {
+        Route::get('/exercises', [MasterExerciseController::class, 'index']);
+    });
+
+    Route::get('daily-calories', [DailyCaloriesController::class, 'index']);
+    Route::post('daily-calories', [DailyCaloriesController::class, 'store']);
+
+    Route::get('medicine', [MedicineLogController::class, 'index']);
     Route::post('medicine', [MedicineLogController::class, 'store']);
     Route::get('medicine/{medicineLog}', [MedicineLogController::class, 'show']);
     Route::put('medicine/{medicineLog}', [MedicineLogController::class, 'update']);
     Route::delete('medicine/{medicineLog}', [MedicineLogController::class, 'destroy']);
+    
+    Route::get('glucose', [GlucoseLogController::class, 'index']);
 
     Route::post('glucose', [GlucoseLogController::class, 'store']);
     Route::get('glucose/{glucoseLog}', [GlucoseLogController::class, 'show']);

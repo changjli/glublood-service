@@ -23,7 +23,7 @@ class UpdateGlucoseLogRequest extends FormRequest
     {
         return [
             'glucose_rate' => 'required|numeric',
-            'time' => 'required|date_format:H:i:s',
+            'time' => 'required|string',
             'time_selection' => 'required|string',
             'notes' => 'required|string|max:300',
         ];
