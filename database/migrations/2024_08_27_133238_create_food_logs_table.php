@@ -13,30 +13,31 @@ return new class extends Migration
     {
         Schema::create('food_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('date');
-            $table->string('time');
+            $table->date('date');
+            $table->time('time');
             $table->integer('type');
             $table->unsignedBigInteger('user_id');
             $table->string('food_name');
-            $table->float('calories')->nullable();
-            $table->float('protein')->nullable();
-            $table->float('carbohydrate')->nullable();
-            $table->float('fat')->nullable();
-            $table->float('serving')->nullable();
-            $table->float('energy_from_fat')->nullable();
-            $table->float('saturated_fat')->nullable();
+            $table->float('calories');
+            $table->float('protein');
+            $table->float('carbohydrate');
+            $table->float('fat');
+            $table->float('serving_qty');
+            $table->string('serving_size');
+            $table->string('brand')->nullable();
             $table->float('cholestrol')->nullable();
+            $table->float('fiber')->nullable();
             $table->float('sugar')->nullable();
-            $table->float('natrium_sodium')->nullable();
-            $table->float('vitamin_a')->nullable();
-            $table->float('vitamin_b1')->nullable();
-            $table->float('vitamin_b2')->nullable();
-            $table->float('kolin')->nullable();
+            $table->float('sodium')->nullable();
+            $table->float('kalium')->nullable(); // potassium
+            $table->string('categories')->nullable();
+            // fatsecrete
+            $table->float('salt')->nullable();
             $table->float('calcium')->nullable();
-            $table->float('potassium')->nullable();
-            $table->float('phospor')->nullable();
+            $table->float('phosporus')->nullable();
             $table->float('magnesium')->nullable();
             $table->float('zinc')->nullable();
+            $table->float('selenium')->nullable();
             $table->string('barcode')->nullable();
             $table->string('note')->nullable();
             $table->string('image')->nullable();

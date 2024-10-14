@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\FoodLog;
+namespace App\Http\Requests\ExerciseLog;
 
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreFoodLogRequest extends BaseFormRequest
+class StoreExerciseLogRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +23,11 @@ class StoreFoodLogRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
+            'exercise_name' => 'required',
             'date' => 'required|date_format:Y-m-d',
-            'time' => 'required|date_format:H:i',
-            'type' => 'required',
-            'food_name' => 'required',
-            'calories' => 'required',
-            'protein' => 'required',
-            'carbohydrate' => 'required',
-            'fat' => 'required',
-            'serving_size' => 'required',
-            'serving_qty' => 'required',
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i',
+            'burned_calories' => 'required',
         ];
     }
 }

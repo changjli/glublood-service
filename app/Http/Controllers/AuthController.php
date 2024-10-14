@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -90,7 +91,7 @@ class AuthController extends Controller
         try {
             $credentials = $details;
 
-            if (!$token = auth()->attempt($credentials)) {
+            if (!$token = Auth::attempt($credentials)) {
                 return ResponseTemplate::sendResponseError(message: 'Login gagal!');
             }
 
@@ -107,7 +108,7 @@ class AuthController extends Controller
                 'data' => new LoginResource($user),
                 'token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => Auth::factory()->getTTL() * 60
             ], 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
@@ -117,7 +118,7 @@ class AuthController extends Controller
     public function logout()
     {
         try {
-            auth()->logout(true);
+            Auth::logout(true);
 
             return ResponseTemplate::sendResponseSuccess(message: 'Logout berhasil!');
         } catch (\Exception $ex) {
@@ -128,14 +129,14 @@ class AuthController extends Controller
     public function refresh()
     {
         try {
-            $token = auth()->refresh(true);
+            $token = Auth::refresh(true);
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Refresh token berhasil!',
                 'token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60
+                'expires_in' => Auth::factory()->getTTL() * 60
             ], 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
