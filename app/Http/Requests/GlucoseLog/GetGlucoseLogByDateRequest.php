@@ -4,7 +4,7 @@ namespace App\Http\Requests\GlucoseLog;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGlucoseLogRequest extends FormRequest
+class GetGlucoseLogByDateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,13 @@ class StoreGlucoseLogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'glucose_rate' => 'required|numeric',
-            'time' => 'required|string',
-            'time_selection' => 'required|string',
-            'notes' => 'required|string|max:300',
+            'date' => 'required',
         ];
+    }
+
+    public function validationData()
+    {
+        // This method ensures query parameters are validated
+        return $this->query();
     }
 }

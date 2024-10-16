@@ -22,8 +22,9 @@ class UpdateMedicineLogRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'date' => 'required|date',
             'name' => 'required|string',
-            'time' => 'required|date_format:H:i:s',
+            'time' => 'required|string',
             'amount' => 'required|numeric',
             'type' => 'required|string',
             'notes' => 'required|string|max:300',

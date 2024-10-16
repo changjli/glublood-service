@@ -6,6 +6,17 @@ use App\Models\GlucoseLog;
 
 class GlucoseLogService implements GlucoseLogServiceInterface
 {
+    public function getByDate(array $query)
+    {
+        $user = auth()->user();
+
+        $glucoseLog = GlucoseLog::where('user_id', $user->id)
+            ->where('date', $query['date'])
+            ->get();
+
+        return $glucoseLog;
+    }
+    
     public function store(array $data)
     {
         $user = auth()->user();

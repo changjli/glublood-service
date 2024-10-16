@@ -7,6 +7,17 @@ use App\Services\MedicineLog\MedicineLogServiceInterface;
 
 class MedicineLogService implements MedicineLogServiceInterface
 {
+    public function getByDate(array $query)
+    {
+        $user = auth()->user();
+
+        $medicineLog = Medicine::where('user_id', $user->id)
+            ->where('date', $query['date'])
+            ->get();
+
+        return $medicineLog;
+    }
+
     public function store(array $data)
     {
         $user = auth()->user();
