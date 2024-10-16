@@ -31,10 +31,18 @@ class DailyCaloriesService implements DailyCaloriesServiceInterface
         $user = Auth::user();
         $data['user_id'] = $user->id;
 
-        return DailyCalories::updateOrCreate([
-            'date' => $data['date'],
-            'user_id' => $data['user_id'],
-        ], $data);
+        $dailyCalories = DailyCalories::where('user_id', $user->id)
+            ->where('date', $data['date'])
+            ->first();
+
+        if ($dailyCalories) {
+            $dailyCalories->target_calories = $data['target_calories'];
+            $dailyCalories->save();
+        } else {
+            DailyCalories::create($data);
+        }
+
+        return;
     }
 
     public function updateConsumedCalories($date, $calories)
@@ -43,8 +51,10 @@ class DailyCaloriesService implements DailyCaloriesServiceInterface
 
         $dailyCalories = DailyCalories::where('user_id', $user->id)
             ->where('date', $date)
-            ->first();
+            ->firstOrFail();
         $dailyCalories->consumed_calories = $dailyCalories->consumed_calories + $calories;
-        return $dailyCalories->save();
+        $dailyCalories->save();
+
+        return;
     }
 }

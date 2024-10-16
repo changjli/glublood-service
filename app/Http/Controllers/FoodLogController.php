@@ -8,6 +8,8 @@ use App\Http\Requests\FoodLog\GetByDateRequest;
 use App\Http\Requests\FoodLog\SearchFoodRequest;
 use App\Http\Requests\FoodLog\StoreFoodLogRequest;
 use App\Http\Requests\FoodLog\UpdateFoodLogRequest;
+use App\Http\Resources\FoodLog\FoodLogDetailResource;
+use App\Http\Resources\FoodLog\FoodLogResource;
 use App\Models\FoodLog;
 use App\Services\DailyCalories\DailyCaloriesService;
 use App\Services\FoodLog\FoodLogService;
@@ -37,7 +39,7 @@ class FoodLogController extends Controller
         try {
             $result = $this->foodLogService->getByDate($request->toArray());
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get food logs by date!', result: $result);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get food logs by date!', result: new FoodLogResource($result));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -61,8 +63,6 @@ class FoodLogController extends Controller
 
             $this->foodLogService->store($request->toArray());
 
-            // $this->dailyCaloriesService->updateConsumedCalories($request->date, $request->calories);
-
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Success store food log!');
         } catch (\Exception $ex) {
@@ -77,7 +77,7 @@ class FoodLogController extends Controller
     public function show(FoodLog $foodLog)
     {
         try {
-            return ResponseTemplate::sendResponseSuccess(message: 'Success show food log!', result: $foodLog);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success show food log!', result: new FoodLogDetailResource($foodLog));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -117,7 +117,7 @@ class FoodLogController extends Controller
         try {
             DB::beginTransaction();
 
-            $this->foodLogService->delete($foodLog->id);
+            $this->foodLogService->delete($foodLog);
 
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Success delete food log!');
