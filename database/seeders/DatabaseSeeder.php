@@ -28,5 +28,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => Carbon::now(),
         ]);
+
+        $this->call(UserProfileSeeder::class);
     }
 }
