@@ -51,9 +51,20 @@ class DailyCaloriesService implements DailyCaloriesServiceInterface
 
         $dailyCalories = DailyCalories::where('user_id', $user->id)
             ->where('date', $date)
-            ->firstOrFail();
-        $dailyCalories->consumed_calories = $dailyCalories->consumed_calories + $calories;
-        $dailyCalories->save();
+            ->first();
+
+        if ($dailyCalories) {
+            $dailyCalories->consumed_calories = $dailyCalories->consumed_calories + $calories;
+            $dailyCalories->save();
+        } else {
+            DailyCalories::create([
+                'date' => $date,
+                'user_id' => $user->id,
+                'consumed_calories' => $calories,
+                'target_calories' => 0,
+            ]);
+        }
+
 
         return;
     }
