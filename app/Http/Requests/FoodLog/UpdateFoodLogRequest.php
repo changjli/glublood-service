@@ -23,7 +23,7 @@ class UpdateFoodLogRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date',
+            'date' => 'required|date_format:Y-m-d',
             'time' => 'required|date_format:H:i',
             'type' => 'required',
             'food_name' => 'required',
@@ -31,7 +31,8 @@ class UpdateFoodLogRequest extends BaseFormRequest
             'protein' => 'required',
             'carbohydrate' => 'required',
             'fat' => 'required',
-            'serving' => 'required',
+            'serving_size' => 'required',
+            'serving_qty' => 'required',
         ];
     }
 }

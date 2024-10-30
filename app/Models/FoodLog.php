@@ -13,6 +13,22 @@ class FoodLog extends Model
         'id',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'calories' => 'float',
+            'fat' => 'float',
+            'carbohydrate' => 'float',
+            'protein' => 'float',
+            'serving_qty' => 'float',
+            'cholestrol' => 'float',
+            'fiber' => 'float',
+            'sugar' => 'float',
+            'sodium' => 'float',
+            'kalium' => 'float',
+        ];
+    }
+
     public function user()
     {
         $this->belongsTo(User::class);

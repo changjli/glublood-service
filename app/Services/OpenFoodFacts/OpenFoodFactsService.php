@@ -16,7 +16,7 @@ class OpenFoodFactsService implements OpenFoodFactsServiceInterface
     {
         $base_url = 'https://world.openfoodfacts.net/api/';
 
-        $url = $base_url . sprintf("v2/products/%s?fields=product_name,brands,nutriments,image_url,categories", $barcode);
+        $url = $base_url . sprintf("v3/product/%s?cc=id&fields=product_name,brands,nutriments,image_url,categories,serving_quantity,serving_quantity_unit", $barcode);
 
         Log::info($url);
 
@@ -24,7 +24,7 @@ class OpenFoodFactsService implements OpenFoodFactsServiceInterface
 
         Log::info($response->json());
 
-        if ($response->json()['status'] == 0) {
+        if ($response->json()['status'] == 'failure') {
             throw new NotFoundHttpException();
         }
 
