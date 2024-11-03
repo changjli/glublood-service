@@ -28,6 +28,7 @@ class FoodLogDetailResource extends JsonResource
             'serving_size' => $this->serving_size,
             'note' => $this->note,
             'type' => $this->type,
+            'img' => $this->image,
         ];
     }
 }

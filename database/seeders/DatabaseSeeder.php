@@ -29,6 +29,9 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
         ]);
 
-        $this->call(UserProfileSeeder::class);
+        $this->call([
+            UserProfileSeeder::class,
+            FoodLogSeeder::class,
+        ]);
     }
 }

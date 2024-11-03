@@ -47,6 +47,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('food', [FoodLogController::class, 'index']);
     Route::post('food', [FoodLogController::class, 'store']);
+    Route::post('food/report/date', [FoodLogController::class, 'getFoodLogReportByDate']);
+    Route::post('food/report/month', [FoodLogController::class, 'getFoodLogReportByMonth']);
+    Route::post('food/report/year', [FoodLogController::class, 'getFoodLogReportByYear']);
     Route::get('food/{foodLog}', [FoodLogController::class, 'show']);
     Route::put('food/{foodLog}', [FoodLogController::class, 'update']);
     Route::delete('food/{foodLog}', [FoodLogController::class, 'destroy']);
