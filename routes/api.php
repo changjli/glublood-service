@@ -42,7 +42,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('master-foods', [MasterFoodController::class, 'search']);
     Route::get('master-foods/{id}', [MasterFoodController::class, 'show']);
 
-    Route::get('food/barcode', [FoodLogController::class, 'getByBarcode']);
+    Route::post('food/barcode', [FoodLogController::class, 'getByBarcode']);
     Route::get('food/search', [FoodLogController::class, 'search']);
 
     Route::get('food', [FoodLogController::class, 'index']);
@@ -90,7 +90,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('medicine/{medicineLog}', [MedicineLogController::class, 'show']);
     Route::put('medicine/{medicineLog}', [MedicineLogController::class, 'update']);
     Route::delete('medicine/{medicineLog}', [MedicineLogController::class, 'destroy']);
-    
+
     Route::get('glucose', [GlucoseLogController::class, 'index']);
 
     Route::post('glucose', [GlucoseLogController::class, 'store']);

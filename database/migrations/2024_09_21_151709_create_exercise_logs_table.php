@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('exercise_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('exercise_id');
-            $table->string('date');
-            $table->string('start_time');
-            $table->string('end_time');
+            $table->string('exercise_name');
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->float('burned_calories');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
-            $table->foreign('exercise_id')->references('id')->on('master_exercises');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

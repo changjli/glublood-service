@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->time('time');
-            $table->integer('type');
+            $table->string('type');
             $table->unsignedBigInteger('user_id');
             $table->string('food_name');
             $table->float('calories');

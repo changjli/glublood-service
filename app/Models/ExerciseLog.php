@@ -22,4 +22,8 @@ class ExerciseLog extends Model
     {
         $this->belongsTo(MasterExercise::class);
     }
+
+    protected $casts = [
+        'burned_calories' => 'decimal:0',
+    ];
 }
