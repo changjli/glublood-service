@@ -57,28 +57,22 @@ Route::middleware('auth:api')->group(function () {
     Route::get('exercise/search', [MasterExerciseController::class, 'search']);
 
     Route::prefix('logs')->group(function () {
-        Route::get('exercise', [ExerciseLogController::class, 'index']);
-        Route::post('exercise', [ExerciseLogController::class, 'store']);
-        Route::get('exercise/{exerciseLog}', [ExerciseLogController::class, 'show']);
-        Route::put('exercise/{id}', [ExerciseLogController::class, 'update']);
-        Route::delete('exercise/{exerciseLog}', [ExerciseLogController::class, 'destroy']);
-    });
+        Route::prefix('exercise')->group(function () {
+            Route::get('', [ExerciseLogController::class, 'index']);
+            Route::post('', [ExerciseLogController::class, 'store']);
+            Route::post('report/date', [ExerciseLogController::class, 'getExerciseLogReportByDate']);
+            Route::post('report/month', [ExerciseLogController::class, 'getExerciseLogReportByMonth']);
+            Route::post('report/year', [ExerciseLogController::class, 'getExerciseLogReportByYear']);
+            Route::get('{exerciseLog}', [ExerciseLogController::class, 'show']);
+            Route::put('{id}', [ExerciseLogController::class, 'update']);
+            Route::delete('{exerciseLog}', [ExerciseLogController::class, 'destroy']);
+        });
 
-    Route::prefix('master')->group(function () {
-        Route::get('/exercises', [MasterExerciseController::class, 'index']);
-    });
-
-    Route::get('daily-calories', [DailyCaloriesController::class, 'index']);
-    Route::post('daily-calories', [DailyCaloriesController::class, 'store']);
-
-    Route::get('exercise/search', [MasterExerciseController::class, 'search']);
-
-    Route::prefix('logs')->group(function () {
-        Route::get('exercise', [ExerciseLogController::class, 'index']);
-        Route::post('exercise', [ExerciseLogController::class, 'store']);
-        Route::get('exercise/{exerciseLog}', [ExerciseLogController::class, 'show']);
-        Route::put('exercise/{id}', [ExerciseLogController::class, 'update']);
-        Route::delete('exercise/{exerciseLog}', [ExerciseLogController::class, 'destroy']);
+        Route::prefix('glucose')->group(function () {
+            Route::post('report/date', [GlucoseLogController::class, 'getGlucoseLogReportByDate']);
+            Route::post('report/month', [GlucoseLogController::class, 'getGlucoseLogReportByMonth']);
+            Route::post('report/year', [GlucoseLogController::class, 'getGlucoseLogReportByYear']);
+        });
     });
 
     Route::prefix('master')->group(function () {

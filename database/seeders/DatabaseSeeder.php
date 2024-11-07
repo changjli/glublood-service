@@ -32,6 +32,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserProfileSeeder::class,
             FoodLogSeeder::class,
+            ExerciseLogSeeder::class,
+            GlucoseLogSeeder::class,
         ]);
     }
 }

@@ -4,20 +4,21 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 
-class FoodLogRepository
+class GlucoseLogRepository
 {
-    public function getFoodLogReportByDateRepo(int $userId, string $startDate, string $endDate)
+    public function getGlucoseLogReportByDateRepo(int $userId, string $startDate, string $endDate)
     {
         $query = '
         SELECT
-            fl."date" ,
-            AVG(fl.calories) as avg_calories
-        FROM food_logs fl
-        WHERE fl.user_id = ?
-            AND fl."date" >= ?
-            AND fl."date" <= ?
-        GROUP BY fl."date"
-        ORDER BY fl."date" DESC
+            gl."date" ,
+            AVG(gl.glucose_rate) as avg_glucose_rate,
+            COUNT(gl.id) as log_count
+        FROM glucose_logs gl
+        WHERE gl.user_id = ?
+            AND gl."date" >= ?
+            AND gl."date" <= ?
+        GROUP BY gl."date"
+        ORDER BY gl."date" DESC
         ';
 
         return DB::select($query, [
@@ -27,7 +28,7 @@ class FoodLogRepository
         ]);
     }
 
-    public function getFoodLogReportByMonthRepo(int $userId, int $month, int $year)
+    public function getGlucoseLogReportByMonthRepo(int $userId, int $month, int $year)
     {
         $query = "
         WITH month_range AS (
@@ -50,13 +51,14 @@ class FoodLogRepository
         SELECT
             TO_CHAR(w.week_start, 'YYYY-MM-DD') || '~' ||
             TO_CHAR(w.week_start + INTERVAL '6 days', 'YYYY-MM-DD') AS week_range,
-            COALESCE(AVG(fl.calories), 0) AS avg_calories
+            COALESCE(AVG(gl.glucose_rate), 0) AS avg_glucose_rate,
+            COUNT(gl.id) as log_count
         FROM
             weeks w
         LEFT JOIN
-            food_logs fl ON fl.\"date\" >= w.week_start
-                        AND fl.\"date\" < w.week_start + INTERVAL '7 days'
-                        AND fl.user_id = ?
+            glucose_logs gl ON gl.\"date\" >= w.week_start
+                        AND gl.\"date\" < w.week_start + INTERVAL '7 days'
+                        AND gl.user_id = ?
         GROUP BY
             w.week_start
         ORDER BY
@@ -72,19 +74,20 @@ class FoodLogRepository
         ]);
     }
 
-    public function getFoodLogReportByYearRepo(int $userId, int $year)
+    public function getGlucoseLogReportByYearRepo(int $userId, int $year)
     {
         $query = "
         WITH months AS (
             SELECT generate_series(1, 12) AS month_number
         ) SELECT
         TO_CHAR(DATE_TRUNC('month', DATE_TRUNC('year', CURRENT_DATE) + (m.month_number - 1) * INTERVAL '1 month'), 'Month') AS month,
-        COALESCE(AVG(fl.calories), 0) as avg_calories
+        COALESCE(AVG(gl.glucose_rate), 0) as avg_glucose_rate,
+        COUNT(gl.id) as log_count
         FROM months m
-        LEFT JOIN food_logs fl
-        ON EXTRACT (MONTH FROM fl.\"date\") = m.month_number
-        WHERE (fl.user_id = ? AND EXTRACT (YEAR FROM fl.\"date\") = ?)
-        OR fl.id IS NULL
+        LEFT JOIN glucose_logs gl
+        ON EXTRACT (MONTH FROM gl.\"date\") = m.month_number
+        WHERE (gl.user_id = ? AND EXTRACT (YEAR FROM gl.\"date\") = ?)
+        OR gl.id IS NULL
         GROUP BY m.month_number
         ORDER BY m.month_number DESC;
         ";

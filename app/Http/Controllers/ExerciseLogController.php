@@ -6,6 +6,12 @@ use App\Classes\ResponseTemplate;
 use App\Http\Requests\ExerciseLog\GetByDateRequest;
 use App\Http\Requests\ExerciseLog\StoreExerciseLogRequest;
 use App\Http\Requests\ExerciseLog\UpdateExerciseLogRequest;
+use App\Http\Requests\LogReport\GetLogReportByDateRequest;
+use App\Http\Requests\LogReport\GetLogReportByMonthRequest;
+use App\Http\Requests\LogReport\GetLogReportByYearRequest;
+use App\Http\Resources\ExerciseLog\GetExerciseLogReportByDateResource;
+use App\Http\Resources\ExerciseLog\GetExerciseLogReportByMonthResource;
+use App\Http\Resources\ExerciseLog\GetExerciseLogReportByYearResource;
 use App\Models\ExerciseLog;
 use App\Services\ExerciseLog\ExerciseLogService;
 use Illuminate\Support\Facades\DB;
@@ -87,5 +93,38 @@ class ExerciseLogController extends Controller
     public function destroy(ExerciseLog $exerciseLog)
     {
         //
+    }
+
+    public function getExerciseLogReportByDate(GetLogReportByDateRequest $request)
+    {
+        try {
+            $result = $this->exerciseLogService->getExerciseLogReportByDateService($request->start_date, $request->end_date);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: GetExerciseLogReportByDateResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getExerciseLogReportByMonth(GetLogReportByMonthRequest $request)
+    {
+        try {
+            $result = $this->exerciseLogService->getExerciseLogReportByMonthService($request->month, $request->year);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by month!', result: GetExerciseLogReportByMonthResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getExerciseLogReportByYear(GetLogReportByYearRequest $request)
+    {
+        try {
+            $result = $this->exerciseLogService->getExerciseLogReportByYearService($request->year);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by year!', result: GetExerciseLogReportByYearResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }

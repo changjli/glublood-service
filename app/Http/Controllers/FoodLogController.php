@@ -13,6 +13,9 @@ use App\Http\Requests\FoodLog\StoreFoodLogRequest;
 use App\Http\Requests\FoodLog\UpdateFoodLogRequest;
 use App\Http\Resources\FoodLog\FoodLogDetailResource;
 use App\Http\Resources\FoodLog\FoodLogResource;
+use App\Http\Resources\FoodLog\GetFoodLogReportByDateResource;
+use App\Http\Resources\FoodLog\GetFoodLogReportByMonthResource;
+use App\Http\Resources\FoodLog\GetFoodLogReportByYearResource;
 use App\Models\FoodLog;
 use App\Services\DailyCalories\DailyCaloriesService;
 use App\Services\FoodLog\FoodLogService;
@@ -161,7 +164,7 @@ class FoodLogController extends Controller
         try {
             $result = $this->foodLogService->getFoodLogReportByDateService($request->start_date, $request->end_date);
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: $result);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: GetFoodLogReportByDateResource::collection($result));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -172,7 +175,7 @@ class FoodLogController extends Controller
         try {
             $result = $this->foodLogService->getFoodLogReportByMonthService($request->month, $request->year);
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by month!', result: $result);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by month!', result: GetFoodLogReportByMonthResource::collection($result));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -183,7 +186,7 @@ class FoodLogController extends Controller
         try {
             $result = $this->foodLogService->getFoodLogReportByYearService($request->year);
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by year!', result: $result);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by year!', result: GetFoodLogReportByYearResource::collection($result));
         } catch (\Exception $ex) {
             throw $ex;
         }
