@@ -17,7 +17,7 @@ class GetExerciseLogReportByYearResource extends JsonResource
         return [
             'month' => $this->month,
             'avg_burned_calories' => (float) $this->avg_burned_calories,
-            'log_count' => $this->log_count,
+            'log_count' => (int) $this->log_count,
         ];
     }
 }

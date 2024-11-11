@@ -8,23 +8,24 @@ class GlucoseLogRepository
 {
     public function getGlucoseLogReportByDateRepo(int $userId, string $startDate, string $endDate)
     {
-        $query = '
+        $query = "
+        WITH date_range AS (
+            SELECT generate_series(?::date, ?::date, interval '1 day') AS \"date\"
+        )
         SELECT
-            gl."date" ,
-            AVG(gl.glucose_rate) as avg_glucose_rate,
-            COUNT(gl.id) as log_count
-        FROM glucose_logs gl
-        WHERE gl.user_id = ?
-            AND gl."date" >= ?
-            AND gl."date" <= ?
-        GROUP BY gl."date"
-        ORDER BY gl."date" DESC
-        ';
+            TO_CHAR(dr.\"date\", 'YYYY-MM-DD') as date,
+            COALESCE(AVG(gl.glucose_rate), 0) AS avg_glucose_rate,
+            COUNT(gl.id) AS log_count
+        FROM date_range dr
+        LEFT JOIN glucose_logs gl ON gl.\"date\" = dr.\"date\" AND gl.user_id = ?
+        GROUP BY dr.\"date\"
+        ORDER BY dr.\"date\" DESC;
+        ";
 
         return DB::select($query, [
-            $userId,
             $startDate,
             $endDate,
+            $userId
         ]);
     }
 

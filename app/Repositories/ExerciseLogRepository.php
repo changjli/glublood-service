@@ -8,23 +8,24 @@ class ExerciseLogRepository
 {
     public function getExerciseLogReportByDateRepo(int $userId, string $startDate, string $endDate)
     {
-        $query = '
+        $query = "
+        WITH date_range AS (
+            SELECT generate_series(?::date, ?::date, interval '1 day') AS \"date\"
+        )
         SELECT
-            el."date" ,
-            AVG(el.burned_calories) as avg_burned_calories,
-            COUNT(el.id) as log_count
-        FROM exercise_logs el
-        WHERE el.user_id = ?
-            AND el."date" >= ?
-            AND el."date" <= ?
-        GROUP BY el."date"
-        ORDER BY el."date" DESC
-        ';
+            TO_CHAR(dr.\"date\", 'YYYY-MM-DD') as date,
+            COALESCE(AVG(el.burned_calories), 0) AS avg_burned_calories,
+            COUNT(el.id) AS log_count
+        FROM date_range dr
+        LEFT JOIN exercise_logs el ON el.\"date\" = dr.\"date\" AND el.user_id = ?
+        GROUP BY dr.\"date\"
+        ORDER BY dr.\"date\" DESC;
+        ";
 
         return DB::select($query, [
-            $userId,
             $startDate,
             $endDate,
+            $userId
         ]);
     }
 

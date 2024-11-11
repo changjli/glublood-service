@@ -17,6 +17,7 @@ class GetFoodLogReportByYearResource extends JsonResource
         return [
             'month' => $this->month,
             'avg_calories' => (float) $this->avg_calories,
+            'log_count' => (int) $this->log_count,
         ];
     }
 }

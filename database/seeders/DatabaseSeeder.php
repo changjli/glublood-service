@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             FoodLogSeeder::class,
             ExerciseLogSeeder::class,
             GlucoseLogSeeder::class,
+            MedicineLogSeeder::class,
         ]);
     }
 }

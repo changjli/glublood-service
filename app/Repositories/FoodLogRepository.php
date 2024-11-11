@@ -8,22 +8,24 @@ class FoodLogRepository
 {
     public function getFoodLogReportByDateRepo(int $userId, string $startDate, string $endDate)
     {
-        $query = '
+        $query = "
+        WITH date_range AS (
+            SELECT generate_series(?::date, ?::date, interval '1 day') AS \"date\"
+        )
         SELECT
-            fl."date" ,
-            AVG(fl.calories) as avg_calories
-        FROM food_logs fl
-        WHERE fl.user_id = ?
-            AND fl."date" >= ?
-            AND fl."date" <= ?
-        GROUP BY fl."date"
-        ORDER BY fl."date" DESC
-        ';
+            TO_CHAR(dr.\"date\", 'YYYY-MM-DD') as date,
+            COALESCE(AVG(fl.calories), 0) AS avg_calories,
+            COUNT(fl.id) AS log_count
+        FROM date_range dr
+        LEFT JOIN food_logs fl ON fl.\"date\" = dr.\"date\" AND fl.user_id = ?
+        GROUP BY dr.\"date\"
+        ORDER BY dr.\"date\" DESC;
+        ";
 
         return DB::select($query, [
-            $userId,
             $startDate,
             $endDate,
+            $userId,
         ]);
     }
 
@@ -50,7 +52,8 @@ class FoodLogRepository
         SELECT
             TO_CHAR(w.week_start, 'YYYY-MM-DD') || '~' ||
             TO_CHAR(w.week_start + INTERVAL '6 days', 'YYYY-MM-DD') AS week_range,
-            COALESCE(AVG(fl.calories), 0) AS avg_calories
+            COALESCE(AVG(fl.calories), 0) AS avg_calories,
+            COUNT(fl.id) as log_count
         FROM
             weeks w
         LEFT JOIN
@@ -79,7 +82,8 @@ class FoodLogRepository
             SELECT generate_series(1, 12) AS month_number
         ) SELECT
         TO_CHAR(DATE_TRUNC('month', DATE_TRUNC('year', CURRENT_DATE) + (m.month_number - 1) * INTERVAL '1 month'), 'Month') AS month,
-        COALESCE(AVG(fl.calories), 0) as avg_calories
+        COALESCE(AVG(fl.calories), 0) as avg_calories,
+        COUNT(fl.id) as log_count
         FROM months m
         LEFT JOIN food_logs fl
         ON EXTRACT (MONTH FROM fl.\"date\") = m.month_number

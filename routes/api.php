@@ -8,6 +8,7 @@ use App\Http\Controllers\FoodLogController;
 use App\Http\Controllers\MasterExerciseController;
 use App\Http\Controllers\MasterFoodController;
 use App\Http\Controllers\GlucoseLogController;
+use App\Http\Controllers\LogReportController;
 use App\Http\Controllers\MedicineLogController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
@@ -67,12 +68,6 @@ Route::middleware('auth:api')->group(function () {
             Route::put('{id}', [ExerciseLogController::class, 'update']);
             Route::delete('{exerciseLog}', [ExerciseLogController::class, 'destroy']);
         });
-
-        Route::prefix('glucose')->group(function () {
-            Route::post('report/date', [GlucoseLogController::class, 'getGlucoseLogReportByDate']);
-            Route::post('report/month', [GlucoseLogController::class, 'getGlucoseLogReportByMonth']);
-            Route::post('report/year', [GlucoseLogController::class, 'getGlucoseLogReportByYear']);
-        });
     });
 
     Route::prefix('master')->group(function () {
@@ -94,4 +89,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('glucose/{glucoseLog}', [GlucoseLogController::class, 'show']);
     Route::put('glucose/{glucoseLog}', [GlucoseLogController::class, 'update']);
     Route::delete('glucose/{glucoseLog}', [GlucoseLogController::class, 'destroy']);
+    Route::post('glucose/report/date', [GlucoseLogController::class, 'getGlucoseLogReportByDate']);
+    Route::post('glucose/report/month', [GlucoseLogController::class, 'getGlucoseLogReportByMonth']);
+    Route::post('glucose/report/year', [GlucoseLogController::class, 'getGlucoseLogReportByYear']);
+
+    Route::post('report', [LogReportController::class, 'getAllLogReportByDate']);
 });

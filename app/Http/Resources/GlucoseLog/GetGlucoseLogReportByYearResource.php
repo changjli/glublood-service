@@ -17,7 +17,7 @@ class GetGlucoseLogReportByYearResource extends JsonResource
         return [
             'month' => $this->month,
             'avg_glucose_rate' => (float) $this->avg_glucose_rate,
-            'log_count' => $this->log_count,
+            'log_count' => (int) $this->log_count,
         ];
     }
 }
