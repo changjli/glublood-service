@@ -5,9 +5,11 @@ use App\Http\Controllers\DailyCaloriesController;
 use App\Http\Controllers\DiabetesPredictionController;
 use App\Http\Controllers\ExerciseLogController;
 use App\Http\Controllers\FoodLogController;
+use App\Http\Controllers\FoodMenuController;
 use App\Http\Controllers\MasterExerciseController;
 use App\Http\Controllers\MasterFoodController;
 use App\Http\Controllers\GlucoseLogController;
+use App\Http\Controllers\LogReportController;
 use App\Http\Controllers\MedicineLogController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
@@ -47,6 +49,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('food', [FoodLogController::class, 'index']);
     Route::post('food', [FoodLogController::class, 'store']);
+    Route::post('food/report/date', [FoodLogController::class, 'getFoodLogReportByDate']);
+    Route::post('food/report/month', [FoodLogController::class, 'getFoodLogReportByMonth']);
+    Route::post('food/report/year', [FoodLogController::class, 'getFoodLogReportByYear']);
     Route::get('food/{foodLog}', [FoodLogController::class, 'show']);
     Route::put('food/{foodLog}', [FoodLogController::class, 'update']);
     Route::delete('food/{foodLog}', [FoodLogController::class, 'destroy']);
@@ -54,28 +59,16 @@ Route::middleware('auth:api')->group(function () {
     Route::get('exercise/search', [MasterExerciseController::class, 'search']);
 
     Route::prefix('logs')->group(function () {
-        Route::get('exercise', [ExerciseLogController::class, 'index']);
-        Route::post('exercise', [ExerciseLogController::class, 'store']);
-        Route::get('exercise/{exerciseLog}', [ExerciseLogController::class, 'show']);
-        Route::put('exercise/{id}', [ExerciseLogController::class, 'update']);
-        Route::delete('exercise/{exerciseLog}', [ExerciseLogController::class, 'destroy']);
-    });
-
-    Route::prefix('master')->group(function () {
-        Route::get('/exercises', [MasterExerciseController::class, 'index']);
-    });
-
-    Route::get('daily-calories', [DailyCaloriesController::class, 'index']);
-    Route::post('daily-calories', [DailyCaloriesController::class, 'store']);
-
-    Route::get('exercise/search', [MasterExerciseController::class, 'search']);
-
-    Route::prefix('logs')->group(function () {
-        Route::get('exercise', [ExerciseLogController::class, 'index']);
-        Route::post('exercise', [ExerciseLogController::class, 'store']);
-        Route::get('exercise/{exerciseLog}', [ExerciseLogController::class, 'show']);
-        Route::put('exercise/{id}', [ExerciseLogController::class, 'update']);
-        Route::delete('exercise/{exerciseLog}', [ExerciseLogController::class, 'destroy']);
+        Route::prefix('exercise')->group(function () {
+            Route::get('', [ExerciseLogController::class, 'index']);
+            Route::post('', [ExerciseLogController::class, 'store']);
+            Route::post('report/date', [ExerciseLogController::class, 'getExerciseLogReportByDate']);
+            Route::post('report/month', [ExerciseLogController::class, 'getExerciseLogReportByMonth']);
+            Route::post('report/year', [ExerciseLogController::class, 'getExerciseLogReportByYear']);
+            Route::get('{exerciseLog}', [ExerciseLogController::class, 'show']);
+            Route::put('{id}', [ExerciseLogController::class, 'update']);
+            Route::delete('{exerciseLog}', [ExerciseLogController::class, 'destroy']);
+        });
     });
 
     Route::prefix('master')->group(function () {
@@ -97,4 +90,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('glucose/{glucoseLog}', [GlucoseLogController::class, 'show']);
     Route::put('glucose/{glucoseLog}', [GlucoseLogController::class, 'update']);
     Route::delete('glucose/{glucoseLog}', [GlucoseLogController::class, 'destroy']);
+    Route::post('glucose/report/date', [GlucoseLogController::class, 'getGlucoseLogReportByDate']);
+    Route::post('glucose/report/month', [GlucoseLogController::class, 'getGlucoseLogReportByMonth']);
+    Route::post('glucose/report/year', [GlucoseLogController::class, 'getGlucoseLogReportByYear']);
+
+    Route::post('report', [LogReportController::class, 'getAllLogReportByDateV2']);
+
+    Route::get('food-menus', [FoodMenuController::class, 'index']);
+    Route::get('food-menus/{foodMenu}', [FoodMenuController::class, 'show']);
 });

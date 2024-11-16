@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\ExerciseLog;
+use App\Models\Medicine;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ExerciseLogSeeder extends Seeder
+class MedicineLogSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        ExerciseLog::factory()
+        Medicine::factory()
             ->count(100)
             ->create();
     }
