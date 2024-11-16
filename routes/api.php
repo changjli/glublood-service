@@ -5,6 +5,7 @@ use App\Http\Controllers\DailyCaloriesController;
 use App\Http\Controllers\DiabetesPredictionController;
 use App\Http\Controllers\ExerciseLogController;
 use App\Http\Controllers\FoodLogController;
+use App\Http\Controllers\FoodMenuController;
 use App\Http\Controllers\MasterExerciseController;
 use App\Http\Controllers\MasterFoodController;
 use App\Http\Controllers\GlucoseLogController;
@@ -93,5 +94,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('glucose/report/month', [GlucoseLogController::class, 'getGlucoseLogReportByMonth']);
     Route::post('glucose/report/year', [GlucoseLogController::class, 'getGlucoseLogReportByYear']);
 
-    Route::post('report', [LogReportController::class, 'getAllLogReportByDate']);
+    Route::post('report', [LogReportController::class, 'getAllLogReportByDateV2']);
+
+    Route::get('food-menus', [FoodMenuController::class, 'index']);
+    Route::get('food-menus/{foodMenu}', [FoodMenuController::class, 'show']);
 });

@@ -93,4 +93,65 @@ class LogReportRepository
             $userId,
         ]);
     }
+
+    public function getAllLogReportByDateRepo(
+        int $userId,
+        string $startDate,
+        string $endDate,
+        $includeFoodLog,
+        $includeExerciseLog,
+        $includeGlucoseLog,
+        $includeMedicineLog
+    ) {
+        $query = "WITH date_range AS (
+            SELECT generate_series(?::date, ?::date, interval '1 day') AS \"date\"
+        )";
+        $params = [$startDate, $endDate];
+
+        $selects = [
+            'TO_CHAR(dr."date", \'YYYY-MM-DD\') as date',
+            'mt.description'
+        ];
+
+        if ($includeFoodLog) {
+            $selects[] = 'COALESCE(AVG(fl.calories), 0) AS avg_calories';
+        }
+        if ($includeExerciseLog) {
+            $selects[] = 'COALESCE(AVG(el.burned_calories), 0) AS avg_burned_calories';
+        }
+        if ($includeGlucoseLog) {
+            $selects[] = 'COALESCE(AVG(gl.glucose_rate), 0) AS avg_glucose_rate';
+        }
+        if ($includeMedicineLog) {
+            $selects[] = 'string_agg(DISTINCT CONCAT(m.amount, \' \', m."type", \' \', m."name"), \' + \') AS medicine_details';
+        }
+
+        $query .= "SELECT " . implode(', ', $selects);
+
+        $query .= " FROM date_range dr CROSS JOIN master_timings mt ";
+
+        if ($includeFoodLog) {
+            $query .= "LEFT JOIN food_logs fl ON fl.\"time\" >= mt.start_time AND fl.\"time\" <= mt.end_time AND fl.user_id = ? ";
+            $params[] = $userId;
+        }
+
+        if ($includeExerciseLog) {
+            $query .= "LEFT JOIN exercise_logs el ON el.\"date\" = dr.\"date\" AND el.start_time >= mt.start_time AND el.start_time <= mt.end_time AND el.user_id = ? ";
+            $params[] = $userId;
+        }
+        if ($includeGlucoseLog) {
+            $query .= "LEFT JOIN glucose_logs gl ON gl.\"date\" = dr.\"date\" AND gl.\"time\"::time >= mt.start_time AND gl.\"time\"::time <= mt.end_time AND gl.user_id = ? ";
+            $params[] = $userId;
+        }
+        if ($includeMedicineLog) {
+            $query .= "LEFT JOIN medicines m ON m.\"date\" = dr.\"date\" AND m.\"time\"::time >= mt.start_time AND m.\"time\"::time <= mt.end_time AND m.user_id = ? ";
+            $params[] = $userId;
+        }
+
+        // $query .= "WHERE fl.\"date\" >= ? AND fl.\"date\" <= ? AND fl.user_id = ? ";
+
+        $query .= "GROUP BY dr.\"date\", mt.description, mt.sequence ORDER BY dr.\"date\", mt.sequence;";
+
+        return DB::select($query, $params);
+    }
 }

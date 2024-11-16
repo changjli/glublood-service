@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseTemplate;
-use App\Http\Requests\FoodLog\GetFoodLogReportByDateRequest;
 use App\Http\Requests\LogReport\GetAllLogReportByDateRequest;
-use App\Http\Requests\LogReport\GetLogReportByDateRequest;
+use App\Http\Resources\LogReport\GetAllLogReportByDateResource;
 use App\Http\Resources\LogReport\GetExerciseLogReportByDateResource;
 use App\Http\Resources\LogReport\GetFoodLogReportByDateResource;
 use App\Http\Resources\LogReport\GetGlucoseLogReportByDateResource;
@@ -44,6 +43,24 @@ class LogReportController extends Controller
             }
 
             return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: $data);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getAllLogReportByDateV2(GetAllLogReportByDateRequest $request)
+    {
+        try {
+            $result = $this->logReportService->getAllLogReportByDateService(
+                $request->start_date,
+                $request->end_date,
+                $request->food_log,
+                $request->exercise_log,
+                $request->glucose_log,
+                $request->medicine_log
+            );
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: GetAllLogReportByDateResource::collection($result));
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -67,4 +67,23 @@ class LogReportService
 
         return $getMedicineLogReport;
     }
+
+    public function getAllLogReportByDateService(
+        string $startDate,
+        string $endDate,
+        $includeFoodLog,
+        $includeExerciseLog,
+        $includeGlucoseLog,
+        $includeMedicineLog
+    ) {
+        $user = Auth::user();
+
+        $getAllReport = $this->logReportRepository->getAllLogReportByDateRepo($user->id, $startDate, $endDate, $includeFoodLog, $includeExerciseLog, $includeGlucoseLog, $includeMedicineLog);
+
+        if (count($getAllReport) < 1) {
+            throw new NotFoundHttpException();
+        }
+
+        return $getAllReport;
+    }
 }
