@@ -8,6 +8,7 @@ use App\Models\FoodMenu;
 use App\Http\Requests\StoreFoodMenuRequest;
 use App\Http\Requests\UpdateFoodMenuRequest;
 use App\Services\FoodMenu\FoodMenuService;
+use Illuminate\Support\Facades\Log;
 
 class FoodMenuController extends Controller
 {
@@ -24,7 +25,7 @@ class FoodMenuController extends Controller
     public function index(GetAllFoodMenuRequest $request)
     {
         try {
-            $result = $this->foodMenuService->getAllFoodMenuService($request->keyword);
+            $result = $this->foodMenuService->getAllFoodMenuService($request->keyword, $request->limit);
 
             return ResponseTemplate::sendResponseSuccess(message: 'Success get all food menu!', result: $result);
         } catch (\Exception $ex) {

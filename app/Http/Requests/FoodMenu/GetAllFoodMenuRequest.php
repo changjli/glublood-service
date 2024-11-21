@@ -24,6 +24,7 @@ class GetAllFoodMenuRequest extends BaseFormRequest
     {
         return [
             'keyword' => 'string',
+            'limit' => 'numeric',
         ];
     }
 

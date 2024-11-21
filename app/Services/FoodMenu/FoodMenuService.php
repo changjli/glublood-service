@@ -8,14 +8,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FoodMenuService
 {
-    public function getAllFoodMenuService(string $keyword = null)
+    public function getAllFoodMenuService(string $keyword = null, int $limit = null)
     {
-        $getFoodMenus = [];
+        $query = FoodMenu::query();
+
         if ($keyword) {
-            $getFoodMenus = FoodMenu::where('title', 'ilike', '%' . $keyword . '%')->get();
-        } else {
-            $getFoodMenus = FoodMenu::all();
+            $query->where('title', 'ilike', '%' . $keyword . '%');
         }
+        if ($limit) {
+            $query->limit($limit);
+        }
+        $getFoodMenus = $query->get();
 
         return $getFoodMenus;
     }

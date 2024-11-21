@@ -77,6 +77,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('daily-calories', [DailyCaloriesController::class, 'index']);
     Route::post('daily-calories', [DailyCaloriesController::class, 'store']);
+    Route::get('daily-calories/burned', [DailyCaloriesController::class, 'getDailyCaloriesBurned']);
 
     Route::get('medicine', [MedicineLogController::class, 'index']);
     Route::post('medicine', [MedicineLogController::class, 'store']);

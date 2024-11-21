@@ -43,4 +43,15 @@ class DailyCaloriesController extends Controller
             throw $ex;
         }
     }
+
+    public function getDailyCaloriesBurned(GetDailyCaloriesByDateRequest $request)
+    {
+        try {
+            $result = $this->dailyCaloriesService->getBurnedCaloriesByDateService($request['date']);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get burned calories by date!', result: $result);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
