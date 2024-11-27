@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseTemplate;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\RegisterUserRequest;
@@ -140,6 +141,91 @@ class AuthController extends Controller
             ], 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
+        }
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return ResponseTemplate::sendResponseErrorWithRollback(message: 'Email reset password gagal dikirim!');
+            }
+
+            $code = $this->generateRandomString(6);
+
+            DB::table('password_resets')->updateOrInsert(
+                [
+                    'email' => $request->email,
+                ],
+                [
+                    'email' => $request->email,
+                    'code' => $code,
+                    'expires_at' => Carbon::now()->addMinutes(3),
+                ]
+            );
+
+            Mail::to($request->email)->send(new VerificationMail($code));
+
+            return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Email reset password telah dikirim!');
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseErrorWithRollback($ex);
+        }
+    }
+
+    public function verifyForgotPassword(ForgotPasswordRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $reset =  DB::table('password_resets')->where('email', $request->email)->where('code', $request->code)->first();
+
+            if (!$reset || $reset->expires_at < Carbon::now()) {
+                return ResponseTemplate::sendResponseErrorWithRollback(message: 'Verifikasi code gagal!');
+            }
+
+            DB::table('password_resets')->where('email', $request->email)->where('code', $request->code)
+                ->update([
+                    'is_verified' => true,
+                ]);
+
+            return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Verifikasi code berhasil!');
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseErrorWithRollback($ex);
+        }
+    }
+
+    public function resetPassword(ForgotPasswordRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $reset =  DB::table('password_resets')->where('email', $request->email)->where('code', $request->code)->first();
+
+            if (!$reset || !$reset->is_verified) {
+                return ResponseTemplate::sendResponseErrorWithRollback(message: 'Reset password gagal!');
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return ResponseTemplate::sendResponseErrorWithRollback(message: 'Reset password gagal!');
+            }
+
+            $user->update([
+                'password' => $request->password,
+            ]);
+
+            DB::table('password_resets')->where('email', $request->email)->where('code', $request->code)->delete();
+
+            $this->logout();
+
+            return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Reset password berhasil!');
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseErrorWithRollback($ex);
         }
     }
 

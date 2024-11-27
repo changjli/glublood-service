@@ -12,4 +12,9 @@ class FoodMenu extends Model
     protected $guarded = [
         'id',
     ];
+
+    public function savedMenus()
+    {
+        $this->hasMany(SavedMenu::class);
+    }
 }

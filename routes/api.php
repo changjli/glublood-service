@@ -11,6 +11,7 @@ use App\Http\Controllers\MasterFoodController;
 use App\Http\Controllers\GlucoseLogController;
 use App\Http\Controllers\LogReportController;
 use App\Http\Controllers\MedicineLogController;
+use App\Http\Controllers\SavedMenuController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Middleware\LoggingMiddleware;
 use App\Models\MasterExercise;
@@ -20,9 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('send-code', [AuthController::class, 'sendCode']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
-Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
-Route::post('change-password', [AuthController::class, 'changePassword']);
 Route::post('refresh', [AuthController::class, 'refresh']);
+Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('verify-password', [AuthController::class, 'verifyForgotPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/test-error', function () {
     throw new \Exception('Test error');
 });
@@ -99,4 +101,5 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('food-menus', [FoodMenuController::class, 'index']);
     Route::get('food-menus/{foodMenu}', [FoodMenuController::class, 'show']);
+    Route::post('food-menus/save', [SavedMenuController::class, 'save']);
 });
