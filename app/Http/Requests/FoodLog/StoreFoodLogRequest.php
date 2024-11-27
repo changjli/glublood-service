@@ -33,7 +33,13 @@ class StoreFoodLogRequest extends BaseFormRequest
             'fat' => 'required',
             'serving_size' => 'required',
             'serving_qty' => 'required',
-            'food_image' => 'file'
+            'food_image' => 'file',
+            'brand' => 'string',
+            'cholestrol' => 'numeric',
+            'fiber' => 'numeric',
+            'sugar' => 'numeric',
+            'sodium' => 'numeric',
+            'kalium' => 'numeric',
         ];
     }
 

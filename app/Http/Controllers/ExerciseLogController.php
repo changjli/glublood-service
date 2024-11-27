@@ -9,6 +9,7 @@ use App\Http\Requests\ExerciseLog\UpdateExerciseLogRequest;
 use App\Http\Requests\LogReport\GetLogReportByDateRequest;
 use App\Http\Requests\LogReport\GetLogReportByMonthRequest;
 use App\Http\Requests\LogReport\GetLogReportByYearRequest;
+use App\Http\Resources\ExerciseLog\ExerciseLogResource;
 use App\Http\Resources\ExerciseLog\GetExerciseLogReportByDateResource;
 use App\Http\Resources\ExerciseLog\GetExerciseLogReportByMonthResource;
 use App\Http\Resources\ExerciseLog\GetExerciseLogReportByYearResource;
@@ -33,7 +34,7 @@ class ExerciseLogController extends Controller
         try {
             $result = $this->exerciseLogService->getByDate($request['date']);
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get exercise logs by date!', result: $result);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get exercise logs by date!', result: ExerciseLogResource::collection($result));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -63,7 +64,7 @@ class ExerciseLogController extends Controller
     public function show(ExerciseLog $exerciseLog)
     {
         try {
-            return ResponseTemplate::sendResponseSuccess(message: 'Success show exercise log!', result: $exerciseLog);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success show exercise log!', result: new ExerciseLogResource($exerciseLog));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -92,7 +93,17 @@ class ExerciseLogController extends Controller
      */
     public function destroy(ExerciseLog $exerciseLog)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $this->exerciseLogService->delete($exerciseLog->id);
+
+            DB::commit();
+            return ResponseTemplate::sendResponseSuccess(message: 'Success delete exercise log!');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
     }
 
     public function getExerciseLogReportByDate(GetLogReportByDateRequest $request)
