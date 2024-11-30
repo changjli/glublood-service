@@ -20,7 +20,7 @@ class ResponseTemplate
         return response()->json($response, 200);
     }
 
-    public static function sendResponseSuccess($message, $result = null, $code = 200)
+    public static function sendResponseSuccess($message, $result = null, $code = 200, $additional = [])
     {
         $response = [
             'status' => $code,
@@ -29,10 +29,15 @@ class ResponseTemplate
         if ($result != null) {
             $response['data'] = $result;
         }
+        if (count($additional) > 1) {
+            foreach ($additional as $key => $value) {
+                $response[$key] = $value;
+            }
+        }
         return response()->json($response, 200);
     }
 
-    public static function sendResponseErrorWithRollback($e = null, $message = "Something went wrong! Process not completed", $code = 200)
+    public static function sendResponseErrorWithRollback($e = null, $message = "Something went wrong! Process not completed", $code = 400)
     {
         DB::rollBack();
         return self::sendResponseError($e, $message, $code);

@@ -33,6 +33,25 @@ class StoreFoodLogRequest extends BaseFormRequest
             'fat' => 'required',
             'serving_size' => 'required',
             'serving_qty' => 'required',
+            'food_image' => 'file',
+            'brand' => 'string',
+            'cholestrol' => 'numeric',
+            'fiber' => 'numeric',
+            'sugar' => 'numeric',
+            'sodium' => 'numeric',
+            'kalium' => 'numeric',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge(json_decode($this->payload, true));
     }
 }

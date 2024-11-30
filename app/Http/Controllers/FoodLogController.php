@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use App\Classes\ResponseTemplate;
 use App\Http\Requests\FoodLog\GetByBarcodeRequest;
 use App\Http\Requests\FoodLog\GetByDateRequest;
+use App\Http\Requests\FoodLog\GetFoodLogReportByDateRequest;
+use App\Http\Requests\FoodLog\GetFoodLogReportByMonthRequest;
+use App\Http\Requests\FoodLog\GetFoodLogReportByYearRequest;
 use App\Http\Requests\FoodLog\SearchFoodRequest;
 use App\Http\Requests\FoodLog\StoreFoodLogRequest;
 use App\Http\Requests\FoodLog\UpdateFoodLogRequest;
 use App\Http\Resources\FoodLog\FoodLogDetailResource;
 use App\Http\Resources\FoodLog\FoodLogResource;
+use App\Http\Resources\FoodLog\GetFoodLogReportByDateResource;
+use App\Http\Resources\FoodLog\GetFoodLogReportByMonthResource;
+use App\Http\Resources\FoodLog\GetFoodLogReportByYearResource;
 use App\Models\FoodLog;
 use App\Services\DailyCalories\DailyCaloriesService;
 use App\Services\FoodLog\FoodLogService;
@@ -61,7 +67,9 @@ class FoodLogController extends Controller
         try {
             DB::beginTransaction();
 
-            $this->foodLogService->store($request->toArray());
+            $foodImage = $request->file('food_image');
+
+            $this->foodLogService->store($request->toArray(), $foodImage);
 
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Success store food log!');
@@ -99,7 +107,9 @@ class FoodLogController extends Controller
         try {
             DB::beginTransaction();
 
-            $this->foodLogService->update($request->toArray(), $foodLog->id);
+            $foodImage = $request->file('food_image');
+
+            $this->foodLogService->update($request->toArray(), $foodLog->id, $foodImage);
 
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Success update food log!');
@@ -144,6 +154,39 @@ class FoodLogController extends Controller
             $result = $this->openFoodFactsService->search($request['keyword']);
 
             return ResponseTemplate::sendResponseSuccess(message: 'Success search!', result: $result);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getFoodLogReportByDate(GetFoodLogReportByDateRequest $request)
+    {
+        try {
+            $result = $this->foodLogService->getFoodLogReportByDateService($request->start_date, $request->end_date);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: GetFoodLogReportByDateResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getFoodLogReportByMonth(GetFoodLogReportByMonthRequest $request)
+    {
+        try {
+            $result = $this->foodLogService->getFoodLogReportByMonthService($request->month, $request->year);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by month!', result: GetFoodLogReportByMonthResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getFoodLogReportByYear(GetFoodLogReportByYearRequest $request)
+    {
+        try {
+            $result = $this->foodLogService->getFoodLogReportByYearService($request->year);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by year!', result: GetFoodLogReportByYearResource::collection($result));
         } catch (\Exception $ex) {
             throw $ex;
         }

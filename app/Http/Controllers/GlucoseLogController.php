@@ -7,6 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GlucoseLog\GetGlucoseLogByDateRequest;
 use App\Http\Requests\GlucoseLog\StoreGlucoseLogRequest;
 use App\Http\Requests\GlucoseLog\UpdateGlucoseLogRequest;
+use App\Http\Requests\LogReport\GetLogReportByDateRequest;
+use App\Http\Requests\LogReport\GetLogReportByMonthRequest;
+use App\Http\Requests\LogReport\GetLogReportByYearRequest;
+use App\Http\Resources\GlucoseLog\GetGlucoseLogReportByDateResource;
+use App\Http\Resources\GlucoseLog\GetGlucoseLogReportByMonthResource;
+use App\Http\Resources\GlucoseLog\GetGlucoseLogReportByYearResource;
 use App\Models\GlucoseLog;
 use App\Services\GlucoseLog\GlucoseLogService;
 use Illuminate\Support\Facades\DB;
@@ -81,6 +87,39 @@ class GlucoseLogController extends Controller
             return ResponseTemplate::sendResponseSuccess(message: 'Success delete glucose log!');
         } catch (\Exception $ex) {
             DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    public function getGlucoseLogReportByDate(GetLogReportByDateRequest $request)
+    {
+        try {
+            $result = $this->glucoseLogService->getGlucoseLogReportByDateService($request->start_date, $request->end_date);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by date!', result: GetGlucoseLogReportByDateResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getGlucoseLogReportByMonth(GetLogReportByMonthRequest $request)
+    {
+        try {
+            $result = $this->glucoseLogService->getGlucoseLogReportByMonthService($request->month, $request->year);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by month!', result: GetGlucoseLogReportByMonthResource::collection($result));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function getGlucoseLogReportByYear(GetLogReportByYearRequest $request)
+    {
+        try {
+            $result = $this->glucoseLogService->getGlucoseLogReportByYearService($request->year);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get report by year!', result: GetGlucoseLogReportByYearResource::collection($result));
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }

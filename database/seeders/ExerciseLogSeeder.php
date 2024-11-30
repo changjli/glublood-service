@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ExerciseLog;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,8 @@ class ExerciseLogSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        ExerciseLog::factory()
+            ->count(100)
+            ->create();
     }
 }

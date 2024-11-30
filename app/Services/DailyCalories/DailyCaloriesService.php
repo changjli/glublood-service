@@ -3,7 +3,10 @@
 namespace App\Services\DailyCalories;
 
 use App\Models\DailyCalories;
+use App\Models\ExerciseLog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DailyCaloriesService implements DailyCaloriesServiceInterface
 {
@@ -67,5 +70,18 @@ class DailyCaloriesService implements DailyCaloriesServiceInterface
 
 
         return;
+    }
+
+    public function getBurnedCaloriesByDateService($date)
+    {
+        $user = Auth::user();
+
+        $data = ExerciseLog::select(DB::raw('COALESCE(AVG(burned_calories), 0) as avg_burned_calories'))
+            ->where('user_id', $user->id)
+            ->where('date', $date)
+            // ->groupBy('date')
+            ->first();
+
+        return $data;
     }
 }
