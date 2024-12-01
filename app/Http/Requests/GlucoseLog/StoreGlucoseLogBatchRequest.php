@@ -4,7 +4,7 @@ namespace App\Http\Requests\GlucoseLog;
 
 use App\Http\Requests\BaseFormRequest;
 
-class StoreGlucoseLogRequest extends BaseFormRequest
+class StoreGlucoseLogBatchRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,13 @@ class StoreGlucoseLogRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'glucose_rate' => 'required|numeric',
-            'date' => 'required|date_format:Y-m-d',
-            'time' => 'required|string',
-            'time_selection' => 'required|string',
-            'notes' => 'required|string|max:300',
-            'type' => 'required:|string|in:manual,auto'
+            'items' => 'required|array',
+            'items.*.date' => 'required|date_format:Y-m-d',
+            'items.*.glucose_rate' => 'required|numeric',
+            'items.*.time' => 'required|string',
+            'items.*.time_selection' => 'string',
+            'items.*.notes' => 'string|max:300',
+            'items.*.type' => 'required:|string|in:manual,auto'
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\GlucoseLog;
 use App\Models\GlucoseLog;
 use App\Repositories\GlucoseLogRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GlucoseLogService implements GlucoseLogServiceInterface
@@ -88,5 +89,32 @@ class GlucoseLogService implements GlucoseLogServiceInterface
         }
 
         return $getGlucoseLogReport;
+    }
+
+    public function syncGlucoseLogService()
+    {
+        $user = auth()->user();
+
+        $maxDate = GlucoseLog::where('user_id', $user->id)
+            ->where('type', 'auto')
+            ->max('date');
+
+        $maxTime = GlucoseLog::where('user_id', $user->id)
+            ->where('type', 'auto')
+            ->max('time');
+
+        return $maxDate . ' ' . $maxTime;
+    }
+
+    public function storeGlucoseLogBatch(array $data)
+    {
+        $user = auth()->user();
+        $data = array_map(function ($d) use ($user) {
+            $d['user_id'] = $user->id;
+            return $d;
+        }, $data);
+
+        DB::table('glucose_logs')->insert($data);
+        return;
     }
 }

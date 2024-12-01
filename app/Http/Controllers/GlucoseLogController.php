@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ResponseTemplate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GlucoseLog\GetGlucoseLogByDateRequest;
+use App\Http\Requests\GlucoseLog\StoreGlucoseLogBatchRequest;
 use App\Http\Requests\GlucoseLog\StoreGlucoseLogRequest;
 use App\Http\Requests\GlucoseLog\UpdateGlucoseLogRequest;
 use App\Http\Requests\LogReport\GetLogReportByDateRequest;
@@ -48,7 +49,8 @@ class GlucoseLogController extends Controller
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Pengisian Glukosa Berhasil');
         } catch (\Exception $ex) {
-            return ResponseTemplate::sendResponseErrorWithRollback($ex);
+            DB::rollBack();
+            throw $ex;
         }
     }
 
@@ -120,6 +122,32 @@ class GlucoseLogController extends Controller
 
             return ResponseTemplate::sendResponseSuccess(message: 'Success get report by year!', result: GetGlucoseLogReportByYearResource::collection($result));
         } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function syncGlucoseLog()
+    {
+        try {
+            $result = $this->glucoseLogService->syncGlucoseLogService();
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success sync glucose log!', result: $result);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function storeGlucoseLogBatch(StoreGlucoseLogBatchRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $this->glucoseLogService->storeGlucoseLogBatch($request->toArray()['items']);
+
+            DB::commit();
+            return ResponseTemplate::sendResponseSuccess(message: 'Pengisian Glukosa Berhasil');
+        } catch (\Exception $ex) {
+            DB::rollBack();
             throw $ex;
         }
     }

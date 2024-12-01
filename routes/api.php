@@ -88,8 +88,9 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('medicine/{medicineLog}', [MedicineLogController::class, 'destroy']);
 
     Route::get('glucose', [GlucoseLogController::class, 'index']);
-
     Route::post('glucose', [GlucoseLogController::class, 'store']);
+    Route::post('glucose/batch', [GlucoseLogController::class, 'storeGlucoseLogBatch']);
+    Route::get('glucose/sync', [GlucoseLogController::class, 'syncGlucoseLog']);
     Route::get('glucose/{glucoseLog}', [GlucoseLogController::class, 'show']);
     Route::put('glucose/{glucoseLog}', [GlucoseLogController::class, 'update']);
     Route::delete('glucose/{glucoseLog}', [GlucoseLogController::class, 'destroy']);
