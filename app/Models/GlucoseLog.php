@@ -9,7 +9,7 @@ class GlucoseLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'date', 'user_id', 'glucose_rate', 'time', 'time_selection', 'notes',
+    protected $guarded = [
+        'id',
     ];
 }
