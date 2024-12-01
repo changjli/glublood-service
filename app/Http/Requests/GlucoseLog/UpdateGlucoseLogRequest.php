@@ -26,6 +26,7 @@ class UpdateGlucoseLogRequest extends FormRequest
             'time' => 'required|string',
             'time_selection' => 'required|string',
             'notes' => 'required|string|max:300',
+            'type' => 'required:|string|in:manual,auto'
         ];
     }
 }
