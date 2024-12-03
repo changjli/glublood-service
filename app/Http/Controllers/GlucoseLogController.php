@@ -14,6 +14,8 @@ use App\Http\Requests\LogReport\GetLogReportByYearRequest;
 use App\Http\Resources\GlucoseLog\GetGlucoseLogReportByDateResource;
 use App\Http\Resources\GlucoseLog\GetGlucoseLogReportByMonthResource;
 use App\Http\Resources\GlucoseLog\GetGlucoseLogReportByYearResource;
+use App\Http\Resources\GlucoseLog\GlucoseLogDetailResource;
+use App\Http\Resources\GlucoseLog\GlucoseLogResource;
 use App\Models\GlucoseLog;
 use App\Services\GlucoseLog\GlucoseLogService;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +35,7 @@ class GlucoseLogController extends Controller
         try {
             $result = $this->glucoseLogService->getByDate($request->toArray());
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get glucose logs by date!', result: $result);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get glucose logs by date!', result: new GlucoseLogResource($result));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -57,7 +59,7 @@ class GlucoseLogController extends Controller
     public function show(GlucoseLog $glucoseLog)
     {
         try {
-            return ResponseTemplate::sendResponseSuccess(message: 'Success show glucose log!', result: $glucoseLog);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success show glucose log!', result:  new GlucoseLogDetailResource($glucoseLog));
         } catch (\Exception $ex) {
             throw $ex;
         }
