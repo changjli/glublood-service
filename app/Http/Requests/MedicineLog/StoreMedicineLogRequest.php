@@ -27,7 +27,7 @@ class StoreMedicineLogRequest extends FormRequest
             'time' => 'required|string',
             'amount' => 'required|numeric',
             'type' => 'required|string',
-            'notes' => 'required|string|max:300',
+            'notes' => 'nullable|string',
         ];
     }
 }
