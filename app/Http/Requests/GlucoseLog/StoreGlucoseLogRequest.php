@@ -26,7 +26,6 @@ class StoreGlucoseLogRequest extends BaseFormRequest
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required|string',
             'time_selection' => 'required|string',
-            'notes' => 'required|string|max:300',
             'type' => 'required:|string|in:manual,auto'
         ];
     }
