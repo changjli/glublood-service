@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('time');
             $table->integer('amount');
             $table->string('type');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });
