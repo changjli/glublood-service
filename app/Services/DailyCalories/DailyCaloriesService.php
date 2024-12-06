@@ -76,7 +76,7 @@ class DailyCaloriesService implements DailyCaloriesServiceInterface
     {
         $user = Auth::user();
 
-        $data = ExerciseLog::select(DB::raw('COALESCE(AVG(burned_calories), 0) as avg_burned_calories'))
+        $data = ExerciseLog::select(DB::raw('COALESCE(SUM(burned_calories), 0) as avg_burned_calories'))
             ->where('user_id', $user->id)
             ->where('date', $date)
             // ->groupBy('date')
