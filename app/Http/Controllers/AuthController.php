@@ -229,6 +229,44 @@ class AuthController extends Controller
         }
     }
 
+    public function getAuthenticatedUser(LoginRequest $request)
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return ResponseTemplate::sendResponseError(message: 'User not authenticated!');
+            }
+
+            $credentials = [
+                'email' => $user->email,
+                'password' => $request->password,
+            ];
+
+            if (!$token = Auth::attempt($credentials)) {
+                return ResponseTemplate::sendResponseError(message: 'Login gagal!');
+            }
+
+            $user = User::where('email', $credentials['email'])->first();
+
+            // check if email is not verified
+            if (!$user->email_verified_at) {
+                return ResponseTemplate::sendResponseError(message: 'Login gagal!');
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Login berhasil!',
+                'data' => new LoginResource($user),
+                'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => Auth::factory()->getTTL() * 60
+            ], 200);            
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseError($ex);
+        }
+    }
+
     private function generateRandomString($length)
     {
         return substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 1, $length);

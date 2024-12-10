@@ -25,6 +25,7 @@ Route::post('refresh', [AuthController::class, 'refresh']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('verify-password', [AuthController::class, 'verifyForgotPassword']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
+Route::post('get-auth', [AuthController::class, 'getAuthenticatedUser']);
 Route::get('/test-error', function () {
     throw new \Exception('Test error');
 });
