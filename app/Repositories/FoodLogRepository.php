@@ -19,7 +19,7 @@ class FoodLogRepository
         FROM date_range dr
         LEFT JOIN food_logs fl ON fl.\"date\" = dr.\"date\" AND fl.user_id = ?
         GROUP BY dr.\"date\"
-        ORDER BY dr.\"date\" DESC;
+        ORDER BY dr.\"date\" ASC;
         ";
 
         return DB::select($query, [

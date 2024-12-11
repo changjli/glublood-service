@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LogReportRepository
 {
@@ -131,20 +132,56 @@ class LogReportRepository
         $query .= " FROM date_range dr CROSS JOIN master_timings mt ";
 
         if ($includeFoodLog) {
-            $query .= "LEFT JOIN food_logs fl ON fl.\"time\" >= mt.start_time AND fl.\"time\" <= mt.end_time AND fl.user_id = ? ";
+            $query .= "LEFT JOIN food_logs fl ON fl.\"date\" = dr.\"date\"
+                AND (
+                    CASE
+                        WHEN mt.start_time <= mt.end_time THEN
+                            fl.\"time\" >= mt.start_time AND fl.\"time\" <= mt.end_time
+                        ELSE
+                            fl.\"time\" >= mt.start_time OR fl.\"time\" <= mt.end_time
+                    END
+                )
+                AND fl.user_id = ? ";
             $params[] = $userId;
         }
 
         if ($includeExerciseLog) {
-            $query .= "LEFT JOIN exercise_logs el ON el.\"date\" = dr.\"date\" AND el.start_time >= mt.start_time AND el.start_time <= mt.end_time AND el.user_id = ? ";
+            $query .= "LEFT JOIN exercise_logs el ON el.\"date\" = dr.\"date\"
+                AND (
+                    CASE
+                        WHEN mt.start_time <= mt.end_time THEN
+                            el.\"start_time\" >= mt.start_time AND el.\"start_time\" <= mt.end_time
+                        ELSE
+                            el.\"start_time\" >= mt.start_time OR el.\"start_time\" <= mt.end_time
+                    END
+                )
+                AND el.user_id = ? ";
             $params[] = $userId;
         }
         if ($includeGlucoseLog) {
-            $query .= "LEFT JOIN glucose_logs gl ON gl.\"date\" = dr.\"date\" AND gl.\"time\"::time >= mt.start_time AND gl.\"time\"::time <= mt.end_time AND gl.user_id = ? ";
+            $query .= "LEFT JOIN glucose_logs gl ON gl.\"date\" = dr.\"date\"
+                AND (
+                    CASE
+                        WHEN mt.start_time <= mt.end_time THEN
+                            gl.\"time\" >= mt.start_time AND gl.\"time\" <= mt.end_time
+                        ELSE
+                            gl.\"time\" >= mt.start_time OR gl.\"time\" <= mt.end_time
+                    END
+                )
+                AND gl.user_id = ? ";
             $params[] = $userId;
         }
         if ($includeMedicineLog) {
-            $query .= "LEFT JOIN medicines m ON m.\"date\" = dr.\"date\" AND m.\"time\"::time >= mt.start_time AND m.\"time\"::time <= mt.end_time AND m.user_id = ? ";
+            $query .= "LEFT JOIN medicines m ON m.\"date\" = dr.\"date\"
+                AND (
+                    CASE
+                        WHEN mt.start_time <= mt.end_time THEN
+                            m.\"time\" >= mt.start_time AND m.\"time\" <= mt.end_time
+                        ELSE
+                            m.\"time\" >= mt.start_time OR m.\"time\" <= mt.end_time
+                    END
+                )
+                AND m.user_id = ? ";
             $params[] = $userId;
         }
 

@@ -19,7 +19,7 @@ class GlucoseLogRepository
         FROM date_range dr
         LEFT JOIN glucose_logs gl ON gl.\"date\" = dr.\"date\" AND gl.user_id = ?
         GROUP BY dr.\"date\"
-        ORDER BY dr.\"date\" DESC;
+        ORDER BY dr.\"date\" ASC;
         ";
 
         return DB::select($query, [

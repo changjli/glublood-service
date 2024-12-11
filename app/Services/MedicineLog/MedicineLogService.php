@@ -13,6 +13,7 @@ class MedicineLogService implements MedicineLogServiceInterface
 
         $medicineLog = Medicine::where('user_id', $user->id)
             ->where('date', $query['date'])
+            ->orderBy('time')
             ->get();
 
         return $medicineLog;

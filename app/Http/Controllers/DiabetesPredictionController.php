@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\ResponseTemplate;
 use App\Http\Requests\PredictDiabetesPredictionRequest;
+use App\Http\Requests\PredictDiabetesRequest;
 use App\Models\DiabetesPrediction;
 use App\Http\Requests\StoreDiabetesPredictionRequest;
 use App\Http\Requests\UpdateDiabetesPredictionRequest;
@@ -111,7 +112,18 @@ class DiabetesPredictionController extends Controller
         try {
             $result = $this->diabetesPredictionService->predict($request->toArray());
 
-            return ResponseTemplate::sendResponseSuccess(message: 'Success predict diabetes!', result: $result, code: 200);
+            return ResponseTemplate::sendResponseSuccess(message: 'Success predict diabetes!', result: ['result' => $result], code: 200);
+        } catch (\Exception $ex) {
+            return ResponseTemplate::sendResponseError($ex);
+        }
+    }
+
+    public function predictV2(PredictDiabetesRequest $request)
+    {
+        try {
+            $result = $this->diabetesPredictionService->predictV2($request->toArray());
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success predict diabetes!', result: ['result' => $result], code: 200);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
         }

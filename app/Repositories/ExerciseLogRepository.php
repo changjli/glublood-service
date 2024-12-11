@@ -19,7 +19,7 @@ class ExerciseLogRepository
         FROM date_range dr
         LEFT JOIN exercise_logs el ON el.\"date\" = dr.\"date\" AND el.user_id = ?
         GROUP BY dr.\"date\"
-        ORDER BY dr.\"date\" DESC;
+        ORDER BY dr.\"date\" ASC;
         ";
 
         return DB::select($query, [

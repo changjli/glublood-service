@@ -41,7 +41,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('diabetes-prediction', [DiabetesPredictionController::class, 'index']);
     Route::post('diabetes-prediction', [DiabetesPredictionController::class, 'store']);
-    Route::get('diabetes-prediction/predict', [DiabetesPredictionController::class, 'predict']);
+    Route::post('diabetes-prediction/predict', [DiabetesPredictionController::class, 'predictV2']);
     Route::get('diabetes-prediction/{diabetesPrediction}', [DiabetesPredictionController::class, 'show']);
 
     Route::get('master-foods', [MasterFoodController::class, 'search']);

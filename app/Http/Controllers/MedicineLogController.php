@@ -44,7 +44,8 @@ class MedicineLogController extends Controller
             DB::commit();
             return ResponseTemplate::sendResponseSuccess(message: 'Pengisian Obat Berhasil');
         } catch (\Exception $ex) {
-            return ResponseTemplate::sendResponseErrorWithRollback($ex);
+            DB::rollBack();
+            throw $ex;
         }
     }
 
