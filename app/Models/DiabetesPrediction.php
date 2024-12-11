@@ -9,21 +9,8 @@ class DiabetesPrediction extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'pregnancies',
-        'glucose',
-        'blood_pressure',
-        'skin_thickness',
-        'insulin',
-        'weight',
-        'height',
-        'is_father',
-        'is_mother',
-        'is_sister',
-        'is_brother',
-        'age',
-        'result',
+    protected $guarded = [
+        'id',
     ];
 
     public function user()
