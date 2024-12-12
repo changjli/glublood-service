@@ -39,7 +39,7 @@ class GlucoseLogRepository
         ),
         first_monday AS (
             SELECT
-                start_date + CAST(((1 - EXTRACT(DOW FROM start_date)) AS INT) % 7) * INTERVAL '1 day' AS week_start
+                start_date + (CAST((1 - EXTRACT(DOW FROM start_date)) AS INT) % 7) * INTERVAL '1 day' AS week_start
             FROM
                 month_range
         ),
