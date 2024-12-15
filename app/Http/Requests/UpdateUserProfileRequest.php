@@ -30,6 +30,8 @@ class UpdateUserProfileRequest extends BaseFormRequest
             'DOB' => 'required|date',
             'gender' => 'required|string|max:255',
             'is_descendant_diabetes' => 'required|boolean',
+            'is_diabetes' => 'required|boolean',
+            'diabetes_type' => 'required|integer',
         ];
     }
 }
