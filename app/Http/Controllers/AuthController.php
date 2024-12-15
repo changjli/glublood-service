@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseTemplate;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -229,39 +230,16 @@ class AuthController extends Controller
         }
     }
 
-    public function getAuthenticatedUser(LoginRequest $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
         try {
             $user = Auth::user();
 
-            if (!$user) {
-                return ResponseTemplate::sendResponseError(message: 'User not authenticated!');
+            if (!Hash::check($request->password, $user->password)) {
+                return ResponseTemplate::sendResponseError(message: 'Request ganti password gagal!');
             }
 
-            $credentials = [
-                'email' => $user->email,
-                'password' => $request->password,
-            ];
-
-            if (!$token = Auth::attempt($credentials)) {
-                return ResponseTemplate::sendResponseError(message: 'Login gagal!');
-            }
-
-            $user = User::where('email', $credentials['email'])->first();
-
-            // check if email is not verified
-            if (!$user->email_verified_at) {
-                return ResponseTemplate::sendResponseError(message: 'Login gagal!');
-            }
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Login berhasil!',
-                'data' => new LoginResource($user),
-                'token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => Auth::factory()->getTTL() * 60
-            ], 200);            
+            return ResponseTemplate::sendResponseSuccessWithCommit(message: 'Request ganti password berhasil!', result: ['email' => $user->email]);
         } catch (\Exception $ex) {
             return ResponseTemplate::sendResponseError($ex);
         }

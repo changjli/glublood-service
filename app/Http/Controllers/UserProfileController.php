@@ -10,8 +10,7 @@ use App\Http\Requests\UpdateUserProfileRequest;
 use Illuminate\Support\Facades\DB;
 use App\Classes\ResponseTemplate;
 use Illuminate\Support\Facades\Log;
-
-
+use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
@@ -117,28 +116,30 @@ class UserProfileController extends Controller
      */
     public function update(UpdateUserProfileRequest $request)
     {
-        $user = auth()->user();
-
-        DB::beginTransaction();
-
         try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+
             $userProfile = UserProfile::where('user_id', $user->id)->first();
 
             if (!$userProfile) {
                 return ResponseTemplate::sendResponseError(message: 'User profile not found.');
             }
 
-            $userProfile->update([
-                'firstname' => $request->firstname,
-                'lastname' => $request->lastname,
-                'weight' => $request->weight,
-                'height' => $request->height,
-                'age' => $request->age,
-                'DOB' => $request->DOB,
-                'gender' => $request->gender,
-                'is_descendant_diabetes' => $request->is_descendant_diabetes,
-                'medical_history' => $request->medical_history,
-            ]);
+            $data = $request->toArray();
+
+            $profileImage = $request->file('profile_image');
+
+            if ($profileImage) {
+                // Store food image
+                $data['image'] = Storage::url(Storage::disk('local')->put('public', $profileImage));
+
+                // Delete old image
+                Storage::disk('local')->delete(str_replace('/storage', 'public', $userProfile->image));
+            }
+
+            $userProfile->update($data);
 
             DB::commit();
 

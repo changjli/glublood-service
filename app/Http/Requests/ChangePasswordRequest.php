@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\MedicineLog;
+namespace App\Http\Requests;
 
-use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetMedicineByDateRequest extends BaseFormRequest
+class ChangePasswordRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +22,7 @@ class GetMedicineByDateRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required',
+            'password' => 'string|required'
         ];
-    }
-
-    public function validationData()
-    {
-        // This method ensures query parameters are validated
-        return $this->query();
     }
 }
