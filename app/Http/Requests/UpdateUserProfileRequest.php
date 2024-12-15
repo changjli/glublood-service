@@ -24,30 +24,12 @@ class UpdateUserProfileRequest extends BaseFormRequest
     {
         return [
             'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
             'weight' => 'required|numeric',
             'height' => 'required|numeric',
             'age' => 'required|integer',
             'DOB' => 'required|date',
             'gender' => 'required|string|max:255',
             'is_descendant_diabetes' => 'required|boolean',
-            'is_diabetes' => 'required|boolean',
-            'medical_history' => 'required|string|max:500',
-            'diabetes_type' => 'integer',
-            'image' => 'string',
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     *
-     * @return void
-     *
-     * @throws \JsonException
-     */
-    protected function prepareForValidation(): void
-    {
-        Log::info($this);
-        $this->merge(json_decode($this->payload, true));
     }
 }

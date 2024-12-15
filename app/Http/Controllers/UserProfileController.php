@@ -127,19 +127,17 @@ class UserProfileController extends Controller
                 return ResponseTemplate::sendResponseError(message: 'User profile not found.');
             }
 
-            $data = $request->toArray();
-
-            $profileImage = $request->file('profile_image');
-
-            if ($profileImage) {
-                // Store food image
-                $data['image'] = Storage::url(Storage::disk('local')->put('public', $profileImage));
-
-                // Delete old image
-                Storage::disk('local')->delete(str_replace('/storage', 'public', $userProfile->image));
-            }
-
-            $userProfile->update($data);
+            $userProfile->update([
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'weight' => $request->weight,
+                'height' => $request->height,
+                'age' => $request->age,
+                'DOB' => $request->DOB,
+                'gender' => $request->gender,
+                'is_descendant_diabetes' => $request->is_descendant_diabetes,
+                'medical_history' => $request->medical_history,
+            ]);
 
             DB::commit();
 
