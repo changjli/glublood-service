@@ -138,6 +138,8 @@ class UserProfileController extends Controller
                 'gender' => $request->gender,
                 'is_descendant_diabetes' => $request->is_descendant_diabetes,
                 'medical_history' => $request->medical_history,
+                'is_diabetes' => $request->is_diabetes,
+                'diabetes_type' => $request->diabetes_type,
             ]);
 
             DB::commit();
