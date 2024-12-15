@@ -39,6 +39,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('user-profile', [UserProfileController::class, 'store']);
     Route::get('user-profile', [UserProfileController::class, 'show']);
     Route::put('user-profile', [UserProfileController::class, 'update']);
+    Route::put('user-profile/image', [UserProfileController::class, 'saveProfileImage']);
+    Route::delete('user-profile/image', [UserProfileController::class, 'deleteProfileImage']);
 
     Route::get('diabetes-prediction', [DiabetesPredictionController::class, 'index']);
     Route::post('diabetes-prediction', [DiabetesPredictionController::class, 'store']);

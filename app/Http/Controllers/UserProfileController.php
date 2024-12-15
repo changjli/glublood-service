@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Classes\ResponseTemplate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
 {
@@ -155,5 +156,45 @@ class UserProfileController extends Controller
     public function destroy(UserProfile $userProfile)
     {
         //
+    }
+
+    public function saveProfileImage(Request $request)
+    {
+        $user = auth()->user();
+
+        $userProfile = UserProfile::where('user_id', $user->id)->first();
+        $oldProfileImage = $userProfile->profile_image;
+
+        if (!$userProfile) {
+            return ResponseTemplate::sendResponseError(message: 'User profile not found.');
+        }
+
+        $profileImage = $request->file('profile_image');
+
+        if ($profileImage) {
+            $data['profile_image'] = Storage::url(Storage::disk('local')->put('public', $profileImage));
+
+            $userProfile->update($data);
+
+            Storage::disk('local')->delete(str_replace('/storage', 'public', $oldProfileImage));
+        }
+    }
+
+    public function deleteProfileImage()
+    {
+        $user = auth()->user();
+
+        $userProfile = UserProfile::where('user_id', $user->id)->first();
+        $oldProfileImage = $userProfile->profile_image;
+
+        if (!$userProfile) {
+            return ResponseTemplate::sendResponseError(message: 'User profile not found.');
+        }
+
+        $data['profile_image'] = null;
+
+        $userProfile->update($data);
+
+        Storage::disk('local')->delete(str_replace('/storage', 'public', $oldProfileImage));
     }
 }
