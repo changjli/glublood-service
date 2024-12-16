@@ -25,7 +25,6 @@ Route::post('refresh', [AuthController::class, 'refresh']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('verify-password', [AuthController::class, 'verifyForgotPassword']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
-Route::post('get-auth', [AuthController::class, 'getAuthenticatedUser']);
 Route::get('/test-error', function () {
     throw new \Exception('Test error');
 });
@@ -35,9 +34,13 @@ Route::middleware('auth:api')->group(function () {
         return response()->json(['data' => 'hello world']);
     });
 
+    Route::post('change-password', [AuthController::class, 'changePassword']);
+
     Route::post('user-profile', [UserProfileController::class, 'store']);
     Route::get('user-profile', [UserProfileController::class, 'show']);
     Route::put('user-profile', [UserProfileController::class, 'update']);
+    Route::put('user-profile/image', [UserProfileController::class, 'saveProfileImage']);
+    Route::delete('user-profile/image', [UserProfileController::class, 'deleteProfileImage']);
 
     Route::get('diabetes-prediction', [DiabetesPredictionController::class, 'index']);
     Route::post('diabetes-prediction', [DiabetesPredictionController::class, 'store']);
@@ -102,6 +105,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('report', [LogReportController::class, 'getAllLogReportByDateV2']);
 
     Route::get('food-menus', [FoodMenuController::class, 'index']);
-    Route::get('food-menus/{foodMenu}', [FoodMenuController::class, 'show']);
     Route::post('food-menus/save', [SavedMenuController::class, 'save']);
+    Route::get('food-menus/save', [SavedMenuController::class, 'index']);
+    Route::get('food-menus/{id}', [FoodMenuController::class, 'show']);
 });

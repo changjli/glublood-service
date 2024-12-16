@@ -7,6 +7,7 @@ use App\Http\Requests\FoodMenu\GetAllFoodMenuRequest;
 use App\Models\FoodMenu;
 use App\Http\Requests\StoreFoodMenuRequest;
 use App\Http\Requests\UpdateFoodMenuRequest;
+use App\Models\SavedMenu;
 use App\Services\FoodMenu\FoodMenuService;
 use Illuminate\Support\Facades\Log;
 
@@ -52,10 +53,12 @@ class FoodMenuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FoodMenu $foodMenu)
+    public function show(int $id)
     {
         try {
-            return ResponseTemplate::sendResponseSuccess(message: 'Success get all food menu!', result: $foodMenu);
+            $result = $this->foodMenuService->getFoodMenuDetailService($id);
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get all food menu!', result: $result);
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -9,6 +9,10 @@ class SavedMenu extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id',
+    ];
+
     public function user()
     {
         $this->belongsTo(User::class);

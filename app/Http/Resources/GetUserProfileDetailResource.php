@@ -26,6 +26,7 @@ class GetUserProfileDetailResource extends JsonResource
             'is_diabetes' => $this->is_diabetes,
             'medical_history' => $this->medical_history,
             'diabetes_type' => $this->diabetes_type,
+            'profile_image' => $this->profile_image,
         ];
     }
 }

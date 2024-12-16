@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\MedicineLog;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMedicineLogRequest extends FormRequest
+class UpdateMedicineLogRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +28,7 @@ class UpdateMedicineLogRequest extends FormRequest
             'time' => 'required|string',
             'amount' => 'required|numeric',
             'type' => 'required|string',
-            'notes' => 'string',
+            'notes' => '',
         ];
     }
 }
