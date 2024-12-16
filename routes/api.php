@@ -105,6 +105,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('report', [LogReportController::class, 'getAllLogReportByDateV2']);
 
     Route::get('food-menus', [FoodMenuController::class, 'index']);
-    Route::get('food-menus/{foodMenu}', [FoodMenuController::class, 'show']);
     Route::post('food-menus/save', [SavedMenuController::class, 'save']);
+    Route::get('food-menus/save', [SavedMenuController::class, 'index']);
+    Route::get('food-menus/{id}', [FoodMenuController::class, 'show']);
 });

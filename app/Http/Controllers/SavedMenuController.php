@@ -17,6 +17,17 @@ class SavedMenuController extends Controller
         $this->savedMenuService = $savedMenuService;
     }
 
+    public function index()
+    {
+        try {
+            $result = $this->savedMenuService->getSavedMenuService();
+
+            return ResponseTemplate::sendResponseSuccess(message: 'Success get all saved menu!', result: $result);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
     public function save(SaveMenuRequest $request)
     {
         try {

@@ -3,6 +3,7 @@
 namespace App\Services\FoodMenu;
 
 use App\Models\FoodMenu;
+use App\Models\SavedMenu;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -25,7 +26,13 @@ class FoodMenuService
 
     public function getFoodMenuDetailService(int $id)
     {
-        $getFoodMenu = FoodMenu::where('id', $id)->first();
+        $user = Auth::user();
+
+        $getFoodMenu = FoodMenu::where('id', $id)->firstOrFail();
+
+        $getSavedMenu = SavedMenu::where('user_id', $user->id)->where('menu_id', $id)->first();
+
+        $getFoodMenu['is_saved'] = $getSavedMenu ? true : false;
 
         return $getFoodMenu;
     }
