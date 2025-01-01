@@ -121,7 +121,7 @@ class DiabetesPredictionController extends Controller
     public function predictV2(PredictDiabetesRequest $request)
     {
         try {
-            $result = $this->diabetesPredictionService->predictV2($request->toArray());
+            $result = $this->diabetesPredictionService->predictV3($request->toArray());
 
             return ResponseTemplate::sendResponseSuccess(message: 'Success predict diabetes!', result: ['result' => $result], code: 200);
         } catch (\Exception $ex) {
