@@ -18,7 +18,7 @@ class MasterFoodService implements MasterFoodServiceInterface
 
     public function search(string $query)
     {
-        $data = MasterFood::select('id', 'food_name')
+        $data = MasterFood::select('id', 'food_name', 'brand')
             ->where('food_name', 'ilike', '%' . $query . '%')
             ->orWhere('brand', 'ilike', '%' . $query . '%')
             ->orWhere('categories', 'ilike', '%' . $query . '%')
