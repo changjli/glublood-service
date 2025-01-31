@@ -14,7 +14,7 @@ class OpenFoodFactsService implements OpenFoodFactsServiceInterface
 {
     public function getByBarcode($barcode)
     {
-        $base_url = 'https://world.openfoodfacts.net/api/';
+        $base_url = 'https://world.openfoodfacts.org/api/';
 
         $url = $base_url . sprintf("v3/product/%s?cc=id&fields=product_name,brands,nutriments,image_url,categories,serving_quantity,serving_quantity_unit,nutrition_data_per", $barcode);
 
